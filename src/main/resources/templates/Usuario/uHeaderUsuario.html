@@ -1,0 +1,24 @@
+<!--HEADER-->
+<div class="container-fluid parte_superior" id="header_login_usuario">
+  <div class="row">
+      <div class="col-sm-9 clogo">
+        <img class="logobj" th:src="@{/imagenes/logoredibj.png}">
+        <h1 class="tlog">Bodega Jany´s</h1>
+      </div>
+      <div class="col-sm-3 perfil">
+          <a class="inicia" href="#">
+              <span class="inses">Usuario</span>
+          </a>
+          <div class="icono_p">
+            <!-- public_pedidos_lista.jsp" -->
+            <a href="#"><i class="fa-solid fa-circle-user ica" style="color: #ff9f48;"></i></a>
+            <!-- public_usuarios_vista_pedidos.jsp -->
+            <a href="#"> <i class="fa-solid fa-cart-plus ico" style="color: #ff9f48;"></i></a>
+            <!-- Salir de la sesion de cliente -->
+            <a th:href="@{/usuario/cerrarSesionU}" style="cursor: pointer;">
+                <i id="ico" class="fa-solid fa-right-from-bracket ico" style="color: #ff9f48;"></i>
+            </a>
+          </div>
+      </div>
+  </div>
+</div>

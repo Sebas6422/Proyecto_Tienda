@@ -1,0 +1,44 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 7 oct 2023, 2:20:54
+    Author     : lenovo
+*/
+body{
+    background: #f2f2f2 !important;
+}
+
+.trj_izquierda{
+    height: 450px;
+    background: #ff9f48;
+    width: 60%;
+    margin: 6% 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6% 0 6%;
+}
+
+.trj_derecha{
+    height: 450px;
+    background: #ff9f48;
+    width: 60%;
+    margin: 6% 0 6% 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6% 0 6%;
+}
+
+p.pp {
+    font-size: 1.3vw;
+    text-align: justify;
+}
+
+h2.tit_n {
+    font-size: 3vw;
+}

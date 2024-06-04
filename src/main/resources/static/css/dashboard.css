@@ -1,0 +1,59 @@
+.bg{
+    height: 700px; 
+    background-color:#424242;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: verdana;
+    gap: 30px
+}
+
+@keyframes rellenar {
+    to{
+        stroke-dasharray: var(--porcentaje) 100;
+    }
+}
+
+.bg .svg{
+    width: 150px;
+    height: 150px;
+}
+
+.bg circle{
+    fill: none;
+    
+    stroke-width: 20;
+    
+    transform: rotate(-90deg);
+    transform-origin: 50%;
+    stroke-dasharray: 100 100;
+    stroke: #AAA;
+}
+
+.bg circle:nth-child(2){
+    stroke-dasharray: 0 100;
+    stroke: var(--color);
+    animation: rellenar .35s linear forwards;
+}
+
+.porcentaje{
+    position: relative;
+}
+
+.porcentaje span{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    bottom: 0%;
+    right: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.titu{
+    font-size: 30px;
+    color: whitesmoke;
+}

@@ -1,0 +1,52 @@
+/*BACKGROUNDCOLOR CONTENEDOR PRINCIPAL*/
+.bg{
+    padding-top: 10px;
+    width: 100%;
+    background-color: #424242;
+}
+
+/*TEXTO RASTRO*/
+.texto_rastro .texto{
+    margin-top: 20px;
+}
+.texto_rastro .rastro{
+    margin-top: 20px;
+    font-size: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+.texto_rastro .rastro nav ol a{
+    text-decoration: none;
+}
+
+/*PARTE MEDIA*/
+.ico_btn{
+    margin-right: 10px;
+}
+.cont_tabla{
+    background-color: #f1f1f1;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 7px;
+    font-weight: bolder;
+}
+.pro_rela{
+    color: white;
+    margin-top: 20px;
+    margin-left: 8rem;
+}
+.cont_nuevo{
+    margin-bottom: 30px;
+}
+.nuevo{
+    margin: 20px;
+}
+.btn_pag{
+    margin-left: 4rem;;
+}
+
+@media (max-width: 1400px){
+    .btn_pag{
+        margin-left: 7rem;;
+    }
+}

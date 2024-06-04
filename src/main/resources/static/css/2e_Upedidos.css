@@ -1,0 +1,53 @@
+* {
+    font-family: Verdana;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+/*TEXTO RASTRO*/
+.texto_rastro .texto{
+    margin-top: 20px;
+}
+
+.texto_rastro .rastro{
+    margin-top: 20px;
+    font-size: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.texto_rastro .rastro nav ol a{
+    text-decoration: none;
+}
+
+/*PARTE MEDIA*/
+
+.parte_media{
+    background-color: #424242;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/*PARTE DERECHA*/
+.parte_derecha{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.parte_derecha table{
+    margin-top:20px;
+    margin-bottom: 20px;
+}
+
+.parte_derecha th, td{
+    text-align: center;
+}
+
+.parte_derecha table i{
+    font-size: 30px;
+    color: black;
+}
