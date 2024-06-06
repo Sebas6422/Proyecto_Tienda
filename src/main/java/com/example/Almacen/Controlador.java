@@ -33,12 +33,12 @@ public class Controlador {
     @GetMapping("/")
     public String inicio()
     {
-        return "Usuario/uIndex";
+        return "uIndex";
     }
 
     @GetMapping("Nosotros")
     public String nosotros() {
-        return "Usuario/uNosotros";  
+        return "uNosotros";  
     }
 
     @GetMapping("/Login")
@@ -47,9 +47,9 @@ public class Controlador {
             return "Administracion/aDashboard"; 
         }
         else if(session.getAttribute("correoUsuarioC") != null && session.getAttribute("tokenSesionC") != null){
-            return "Usuario/uLoginUsuario";
+            return "uLoginUsuario";
         }else{
-            return "Usuario/Login";  
+            return "Login";  
         }
     }
 
@@ -62,13 +62,13 @@ public class Controlador {
         if (session.getAttribute("correoUsuarioC") == null && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
-        return "Usuario/uLoginUsuario";
+        return "uLoginUsuario";
     }
     
     @GetMapping("/VolverLogin")
     public String getMethodName(Model model) {
         model.addAttribute("error", "Sesión expirada");
-        return"Usuario/Login";
+        return"Login";
     }
     
     
@@ -82,7 +82,7 @@ public class Controlador {
         if (session.getAttribute("correoUsuario") == null && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
-        return "Administracion/aIndexDashboard";  
+        return "aIndexDashboard";  
     }
 
     @GetMapping("/a_Dashboard")
@@ -95,7 +95,7 @@ public class Controlador {
         if (session.getAttribute("correoUsuario") == null && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
-        return "Administracion/aDashboard"; 
+        return "aDashboard"; 
     }
 
     @GetMapping("/AdminUsuarios")
@@ -108,7 +108,7 @@ public class Controlador {
         if (session.getAttribute("correoUsuario") == null && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
-        return "Administracion/aUsuarios";  
+        return "aUsuarios";  
     }
 
     @GetMapping("/AdminProductos")
@@ -123,7 +123,7 @@ public class Controlador {
         }
         List<Producto> productos = serviceP.Listar();
         model.addAttribute("productos", productos); 
-        return "Administracion/aProductos";
+        return "aProductos";
     }
 
     @GetMapping("/AdminProductRegistro")
@@ -140,7 +140,7 @@ public class Controlador {
         model.addAttribute("cat_productos", cat_productos);
         model.addAttribute("proveedores", proveedores);
         model.addAttribute("producto", new Producto()); // Assuming you have a Producto class
-        return "Administracion/aProductos_registrar";
+        return "aProductos_registrar";
     }
     
 
@@ -156,7 +156,7 @@ public class Controlador {
         }
         List<Proveedor> proveedores = service.Listar();
         model.addAttribute("proveedores", proveedores); 
-        return "Administracion/aProveedores";  
+        return "aProveedores";  
 
     }
 
@@ -169,7 +169,7 @@ public class Controlador {
         if (session.getAttribute("correoUsuario") == null && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
-        return "Administracion/aProveedor_registrar";
+        return "aProveedor_registrar";
     }
 
     @GetMapping("/AdminVentas")
@@ -182,7 +182,7 @@ public class Controlador {
         if (session.getAttribute("correoUsuario") == null && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
-        return "Administracion/aVentas";
+        return "aVentas";
     }
 
     @GetMapping("/AdminPedidos")
@@ -195,6 +195,6 @@ public class Controlador {
         if (session.getAttribute("correoUsuario") == null && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
-        return "Administracion/aPedidos";
+        return "aPedidos";
     }
 }
