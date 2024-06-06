@@ -33,7 +33,7 @@ public class Controlador {
     @GetMapping("/")
     public String inicio()
     {
-        return "/uIndex";
+        return "Usuario/uIndex";
     }
 
     @GetMapping("Nosotros")
