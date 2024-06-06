@@ -48,13 +48,13 @@
 
     </head>
     <body>
-        <div th:replace="/Usuario/uHeader :: #usuario_header"></div>
-        <div th:replace="/Usuario/uNavegador :: #usuario_navegador"></div>
+        <div th:replace="~{/Usuario/uHeader :: #usuario_header}"></div>
+        <div th:replace="~{/Usuario/uNavegador :: #usuario_navegador}"></div>
 
         <div class="bg">
-            <div th:replace="/Usuario/uBody :: #usuario_body"></div>
+            <div th:replace="~{/Usuario/uBody :: #usuario_body}"></div>
         </div>
 
-        <div th:replace="/Usuario/uFooter :: #usuario_footer"></div>
+        <div th:replace="~{/Usuario/uFooter :: #usuario_footer}"></div>
     </body>
 </html>
