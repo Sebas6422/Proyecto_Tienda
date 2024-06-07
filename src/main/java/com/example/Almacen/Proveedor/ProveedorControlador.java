@@ -43,7 +43,7 @@ public class ProveedorControlador {
     public String Mostrar(Model model) {
         List<Proveedor> proveedores = service.Listar();
         model.addAttribute("proveedores", proveedores); 
-        return "Administracion/aProveedores";
+        return "/aProveedores";
     }
 
     @GetMapping("/getImage/{id}")
@@ -145,7 +145,7 @@ public class ProveedorControlador {
         if (proveedorOptional.isPresent()) {
             Proveedor proveedor = proveedorOptional.get();
             model.addAttribute("proveedor", proveedor);
-            return "Administracion/aProveedor_editar";
+            return "/aProveedor_editar";
         } else {
             return "error";
         }
