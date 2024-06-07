@@ -18,7 +18,7 @@
 
         <title>Bodega Jany´s</title>
 
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
             integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
@@ -105,13 +105,13 @@
                                                        placeholder="Ingrese la contraseña" id="password" required>
                                                 <i class="fas fa-eye toggle-password" id="togglePassword"></i>
                                             </div>
-                                            <div>
+                                            <!-- <div>
                                                 <div class="g-recaptcha" data-sitekey="6LcUXuUpAAAAAOA8xivYtflvxXfbOfez4jutVZsq"></div>
-                                            </div>
+                                            </div> -->
                                             <button type="submit" class="btn btn-secondary mt-3" style="background-color: #424242;">Iniciar Sesión</button>
-                                            <!-- <a href="" class="btn btn-small btn-primary mt-3" data-toggle="modal"
+                                            <a href="" class="btn btn-small btn-primary mt-3" data-toggle="modal"
                                                data-target="#exampleModalCenter" style="background-color: #424242;">Registrarse</a>
-                                            <div th:if="${error}" th:text="${error}" style="color: red;"></div> -->
+                                            <div th:if="${error}" th:text="${error}" style="color: red;"></div>
                                         </form>
                                         <script th:src="@{/js/captcha.js}"></script>
                                         <style>
@@ -125,7 +125,7 @@
                                                 position: relative;
                                             }
                                         </style>
-                                        <!-- <script>
+                                        <script>
                                             document.addEventListener('DOMContentLoaded', function() {
                                                 const togglePassword = document.getElementById('togglePassword');
                                                 const passwordField = document.getElementById('password');
@@ -138,7 +138,7 @@
                                                     this.classList.toggle('fa-eye-slash');
                                                 });
                                             });
-                                        </script> -->
+                                        </script>
                                     </div>
                                 </div>
                             </div>
