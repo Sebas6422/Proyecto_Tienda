@@ -112,6 +112,8 @@ public class UsuarioControlador {
                         // Reiniciar los intentos fallidos al ingresar exitosamente al login
                         intentosFallidos.remove(correo);
                         return "uLoginUsuario";
+                    } else if (usuario.getRol().getRol_id() == 3) {
+                        return "vIndexVendedor";
                     }
                 }
             }
