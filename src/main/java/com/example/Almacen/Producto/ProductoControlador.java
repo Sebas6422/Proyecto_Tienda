@@ -32,7 +32,7 @@ public class ProductoControlador {
     public String Mostrar(Model model) {
         List<Producto> productos = service.Listar();
         model.addAttribute("productos", productos);
-        return "Administracion/aProductos";
+        return "aProductos";
     }
     
     @GetMapping("/getImage/{id}")
