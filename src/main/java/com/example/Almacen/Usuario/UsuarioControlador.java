@@ -118,7 +118,7 @@ public class UsuarioControlador {
                         session.setAttribute("sessionStartTime", System.currentTimeMillis());
                         // Reiniciar los intentos fallidos al ingresar exitosamente al login
                         intentosFallidos.remove(correo);
-                        return "redirect:/AdminDashIn";
+                        return "redirect:/a_Dashboard";
                     } else if (usuario.getRol().getRol_id() == 2) {
                         // Verifica al usuario
                         String tokenSesion = UUID.randomUUID().toString();
