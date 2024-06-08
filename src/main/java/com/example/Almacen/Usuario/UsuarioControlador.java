@@ -57,15 +57,27 @@ public class UsuarioControlador {
         return sesionesActivasU.containsKey(correoUsuario);
     }
 
-    @PostMapping("/ingresarLogin")
-    public String verificarLogin(@RequestParam("us_correo") String correo,
-                                @RequestParam("us_contrasenha") String contra,
-                                Model model, HttpSession session) {
+    @GetMapping("/ingresarLogin")
+    public String mostrarLogin() {
+        // Redirige a la página de inicio de sesión si se accede a la ruta con un método GET
+        return "redirect:/Login";
+    }
 
-        if(!correoCorrecto(correo)){
-            model.addAttribute("error", "El campo 'Correo' debe ser correo correcto");
+    @PostMapping("/ingresarLogin")
+    public String verificarLogin(@RequestParam(value = "us_correo", required = false) String correo,
+                                 @RequestParam(value = "us_contrasenha", required = false) String contra,
+                                 Model model, HttpSession session) {
+
+        if (correo == null || correo.isEmpty() || contra == null || contra.isEmpty()) {
+            model.addAttribute("error", "Los campos 'Correo' y 'Contraseña' son obligatorios.");
             return "Login";
         }
+
+        if (!correoCorrecto(correo)) {
+            model.addAttribute("error", "El campo 'Correo' debe ser un correo válido.");
+            return "Login";
+        }
+
         // Verificar si el usuario está bloqueado
         if (tiempoBloqueo.containsKey(correo)) {
             long tiempoRestante = (System.currentTimeMillis() - tiempoBloqueo.get(correo)) / 1000;
@@ -88,12 +100,12 @@ public class UsuarioControlador {
         for (Usuario usuario : usuarios) {
             if (usuario.getUs_correo().equals(correo)) {
                 userFound = true;
-                if(usuario.getUs_contrasenha().equals(contra)){
+                if (usuario.getUs_contrasenha().equals(contra)) {
                     if (sesionActivaA(correo) || sesionActivaU(correo)) {
                         model.addAttribute("error", "Esta cuenta ya está logueada.");
                         return "Login";
                     }
-    
+
                     if (usuario.getRol().getRol_id() == 1) {
                         String tokenSesion = UUID.randomUUID().toString();
                         sesionesActivasA.put(correo, tokenSesion);
@@ -122,7 +134,7 @@ public class UsuarioControlador {
         if (!userFound) {
             // No se encontró el usuario
             model.addAttribute("error", "Correo o contraseña incorrecta");
-            return "Login";
+            return "redirect:Login";
         }
 
         // Manejar intentos fallidos
@@ -135,6 +147,7 @@ public class UsuarioControlador {
         }
         return "Login";
     }
+
 
     @GetMapping("/cerrarSesionA")
     public String cerrarSesionA(HttpSession session) {
