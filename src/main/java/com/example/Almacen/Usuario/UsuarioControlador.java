@@ -38,7 +38,7 @@ public class UsuarioControlador {
         if (correoUsuario == null || !sesionActivaA(correoUsuario)) {
             return "redirect:/";
         }
-        return "aDashboard";
+        return "redirect:/aDashboard";
     }
 
     public Map<String, String> getSesionesA() {
@@ -58,9 +58,13 @@ public class UsuarioControlador {
     }
 
     @GetMapping("/ingresarLogin")
-    public String mostrarLogin() {
-        // Redirige a la página de inicio de sesión si se accede a la ruta con un método GET
-        return "redirect:/Login";
+    public String mostrarLogin(HttpSession session, Model model) {
+        // Pasar el mensaje de error si existe
+        if (session.getAttribute("error") != null) {
+            model.addAttribute("error", session.getAttribute("error"));
+            session.removeAttribute("error"); // Eliminar el mensaje de error después de mostrarlo
+        }
+        return "Login";
     }
 
     @PostMapping("/ingresarLogin")
@@ -69,21 +73,21 @@ public class UsuarioControlador {
                                  Model model, HttpSession session) {
 
         if (correo == null || correo.isEmpty() || contra == null || contra.isEmpty()) {
-            model.addAttribute("error", "Los campos 'Correo' y 'Contraseña' son obligatorios.");
-            return "Login";
+            session.setAttribute("error", "Los campos 'Correo' y 'Contraseña' son obligatorios.");
+            return "redirect:/usuario/ingresarLogin";
         }
 
         if (!correoCorrecto(correo)) {
-            model.addAttribute("error", "El campo 'Correo' debe ser un correo válido.");
-            return "Login";
+            session.setAttribute("error", "El campo 'Correo' debe ser un correo válido.");
+            return "redirect:/usuario/ingresarLogin";
         }
 
         // Verificar si el usuario está bloqueado
         if (tiempoBloqueo.containsKey(correo)) {
             long tiempoRestante = (System.currentTimeMillis() - tiempoBloqueo.get(correo)) / 1000;
             if (tiempoRestante < BLOQUEO_TIEMPO_MS / 1000) {
-                model.addAttribute("error", "Cuenta bloqueada. Inténtelo de nuevo en " + (BLOQUEO_TIEMPO_MS / 1000 - tiempoRestante) + " segundos.");
-                return "Login";
+                session.setAttribute("error", "Cuenta bloqueada. Inténtelo de nuevo en " + (BLOQUEO_TIEMPO_MS / 1000 - tiempoRestante) + " segundos.");
+                return "redirect:/usuario/ingresarLogin";
             } else {
                 // El periodo de bloqueo ha expirado
                 tiempoBloqueo.remove(correo);
@@ -102,8 +106,8 @@ public class UsuarioControlador {
                 userFound = true;
                 if (usuario.getUs_contrasenha().equals(contra)) {
                     if (sesionActivaA(correo) || sesionActivaU(correo)) {
-                        model.addAttribute("error", "Esta cuenta ya está logueada.");
-                        return "Login";
+                        session.setAttribute("error", "Esta cuenta ya está logueada.");
+                        return "redirect:/usuario/ingresarLogin";
                     }
 
                     if (usuario.getRol().getRol_id() == 1) {
@@ -114,7 +118,7 @@ public class UsuarioControlador {
                         session.setAttribute("sessionStartTime", System.currentTimeMillis());
                         // Reiniciar los intentos fallidos al ingresar exitosamente al login
                         intentosFallidos.remove(correo);
-                        return Mostrar(model, session);
+                        return "redirect:/AdminDashIn";
                     } else if (usuario.getRol().getRol_id() == 2) {
                         // Verifica al usuario
                         String tokenSesion = UUID.randomUUID().toString();
@@ -123,7 +127,7 @@ public class UsuarioControlador {
                         session.setAttribute("tokenSesionC", tokenSesion);
                         // Reiniciar los intentos fallidos al ingresar exitosamente al login
                         intentosFallidos.remove(correo);
-                        return "uLoginUsuario";
+                        return "redirect:/uLoginUsuario";
                     } else if (usuario.getRol().getRol_id() == 3) {
                         return "vIndexVendedor";
                     }
@@ -133,19 +137,19 @@ public class UsuarioControlador {
 
         if (!userFound) {
             // No se encontró el usuario
-            model.addAttribute("error", "Correo o contraseña incorrecta");
-            return "redirect:Login";
+            session.setAttribute("error", "Correo o contraseña incorrecta");
+            return "redirect:/usuario/ingresarLogin";
         }
 
         // Manejar intentos fallidos
         intentosFallidos.put(correo, intentosFallidos.getOrDefault(correo, 0) + 1);
         if (intentosFallidos.get(correo) >= MAX_INTENTOS) {
             tiempoBloqueo.put(correo, System.currentTimeMillis());
-            model.addAttribute("error", "Cuenta bloqueada debido a demasiados intentos fallidos. Inténtelo en 1 minuto.");
+            session.setAttribute("error", "Cuenta bloqueada debido a demasiados intentos fallidos. Inténtelo en 1 minuto.");
         } else {
-            model.addAttribute("error", "Correo o contraseña incorrectos. Intento " + intentosFallidos.get(correo) + " de " + MAX_INTENTOS + ".");
+            session.setAttribute("error", "Correo o contraseña incorrectos. Intento " + intentosFallidos.get(correo) + " de " + MAX_INTENTOS + ".");
         }
-        return "Login";
+        return "redirect:/usuario/ingresarLogin";
     }
 
 
