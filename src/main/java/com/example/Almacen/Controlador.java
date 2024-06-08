@@ -41,6 +41,7 @@ public class Controlador {
         return "uNosotros";  
     }
 
+    
     @GetMapping("/Login")
     public String login(HttpSession session) {
         if(session.getAttribute("correoUsuario") != null && session.getAttribute("tokenSesion") != null){
