@@ -82,7 +82,7 @@ public class ProductoControlador {
         pro.setProduc_stock(stock);
 
         service.Guardar(pro);
-        return Mostrar(model);
+        return "redirect:/producto/productos/";
     }
     
 }
