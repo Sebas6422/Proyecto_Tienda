@@ -13,6 +13,8 @@ import com.example.Almacen.Producto.IProductoService;
 import com.example.Almacen.Producto.Producto;
 import com.example.Almacen.Proveedor.IProveedorService;
 import com.example.Almacen.Proveedor.Proveedor;
+import com.example.Almacen.Usuario.IUsuarioService;
+import com.example.Almacen.Usuario.Usuario;
 import com.example.Almacen.Usuario.UsuarioControlador;
 
 import jakarta.servlet.http.HttpSession;
@@ -30,6 +32,8 @@ public class Controlador {
     private IProductoService serviceP;
     @Autowired
     private ICategoria_ProductoService serviceC;
+    @Autowired
+    private IUsuarioService serviceU;
 
     @GetMapping("/")
     public String inicio()
@@ -101,7 +105,7 @@ public class Controlador {
     }
 
     @GetMapping("/AdminUsuarios")
-    public String admin_usuarios(HttpSession session)
+    public String admin_usuarios(HttpSession session, Model model)
     {
         if(session.getAttribute("correoUsuario") == null || session.getAttribute("tokenSesion") == null){
             return "error";
@@ -110,6 +114,8 @@ public class Controlador {
         if (session.getAttribute("correoUsuario") == null && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
+        List<Usuario> usuarios = serviceU.Listar();
+        model.addAttribute("clientes", usuarios);
         return "aUsuarios";  
     }
 
