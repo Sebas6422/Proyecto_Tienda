@@ -14,16 +14,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.Almacen.Encriptador.Hash;
+import com.example.Almacen.Rol.IRol;
+import com.example.Almacen.Rol.Rol;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.servlet.http.HttpSession;
+
 
 @RequestMapping("/usuario/")
 @Controller
 public class UsuarioControlador {
     @Autowired
     private IUsuarioService service;
+
+    @Autowired
+    private IRol iRol;
 
     public static Map<String, String> sesionesActivasA = new HashMap<>();
     public static Map<String, String> sesionesActivasU = new HashMap<>();
@@ -127,7 +134,7 @@ public class UsuarioControlador {
                         session.setAttribute("tokenSesionC", tokenSesion);
                         // Reiniciar los intentos fallidos al ingresar exitosamente al login
                         intentosFallidos.remove(correo);
-                        return "redirect:/uLoginUsuario";
+                        return "redirect:/Cliente";
                     } else if (usuario.getRol().getRol_id() == 3) {
                         return "vIndexVendedor";
                     }
@@ -198,4 +205,40 @@ public class UsuarioControlador {
         Matcher m = p.matcher(correo);
         return m.find();
     }
+
+
+    @PostMapping("/registrarCliente")
+    public String registrarCliente(@RequestParam("dni") String us_dni,
+                                   @RequestParam("nombre") String us_nombre,
+                                   @RequestParam("apellido") String us_apellido,
+                                   @RequestParam("correo") String us_correo,
+                                   @RequestParam("contraseña") String us_clave,
+                                   @RequestParam("direccion") String us_direccion,
+                                   @RequestParam("telefono") String us_telefono,
+                                   Model model, HttpSession session) {
+        Usuario usuario = new Usuario();
+
+        Hash hash = new Hash();
+        us_clave = hash.StringToHash(us_clave, "SHA256");
+        usuario.setUs_contrasenha(us_clave);            
+
+        usuario.setUs_dni(us_dni);                            
+        usuario.setUs_nombre(us_nombre);
+        usuario.setUs_apellido(us_apellido);
+        usuario.setUs_correo(us_correo);
+        usuario.setUs_direccion(us_direccion);
+        usuario.setUs_telefono(us_telefono);
+        
+        //Buscamos y asignamos el rol al Cliente
+        Rol rolCliente = iRol.findById(2)
+        .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+        usuario.setRol(rolCliente);
+
+        service.Guardar(usuario);
+
+        session.setAttribute("success", "El cliente se registro con exito");
+
+        return "redirect:/Login";
+    }
+    
 }

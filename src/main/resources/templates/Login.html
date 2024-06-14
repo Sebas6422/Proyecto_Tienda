@@ -19,6 +19,8 @@
         <title>Bodega Jany´s</title>
 
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
             integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
@@ -112,6 +114,7 @@
                                             <a href="" class="btn btn-small btn-primary mt-3" data-toggle="modal"
                                                data-target="#exampleModalCenter" style="background-color: #424242;">Registrarse</a>
                                             <div th:if="${error}" th:text="${error}" style="color: red;"></div>
+                                            <div th:if="${success}" th:text="${success}" style="color: green;"></div>
                                         </form>
                                         <script th:src="@{/js/captcha.js}"></script>
                                         <style>
@@ -155,50 +158,46 @@
                             <h5 class="modal-title font-weight-bold text-white" id="exampleModalLabel">
                                 REGISTRO!</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                <i class="bi bi-x-circle"></i>
                             </button>
                         </div>
                         <div class="modal-body">
-                            
-                            
-                            <form action="Procesa" class="row" method="post">
+                            <form action="/usuario/registrarCliente" method="post" enctype="multipart/form-data">
                                  <input type="hidden" name="opcion" value="agregar2">
                                  <input type="hidden" name="grupo" value="usuarios">
                                  <input type="hidden" name="us_roles" value="1">
                                 <div class="form-group col-lg-6">
                                     
                                     <label for="exampleInputEmail1">Dni</label>
-                                    <input type="text" class="form-control" name="us_dni" id="exampleInputEmail1" 
-                                           placeholder="Ingrese su usuario">
-                                    
-                                    <label for="exampleInputEmail1">Usuario</label>
-                                    <input type="text" class="form-control" name="us_correo"; id="exampleInputEmail1" 
+                                    <input type="text" class="form-control" name="dni" id="exampleInputEmail1" required
                                            placeholder="Ingrese su usuario">
 
                                     <label for="exampleInputEmail1">Nombres</label>
-                                    <input type="text" class="form-control" name="us_nombre" id="exampleInputEmail1" 
+                                    <input type="text" class="form-control" name="nombre" id="exampleInputEmail1" required
                                            placeholder="Ingrese su nombre">
 
                                     <label for="exampleInputEmail1">Apellidos</label>
-                                    <input type="text" class="form-control" name="us_apellido" id="exampleInputEmail1" 
+                                    <input type="text" class="form-control" name="apellido" id="exampleInputEmail1" required
                                            placeholder="Ingrese su apellido">
 
                                     <label for="exampleInputEmail1">Dirección</label>
-                                    <input type="text" class="form-control" name="us_direccion" id="exampleInputEmail1" 
-                                           placeholder="Ingrese su dirección">
+                                    <input type="text" class="form-control" name="correo" id="exampleInputEmail1" required
+                                           placeholder="Ingrese su correo">
 
                                     <label for="exampleInputEmail1">Contraseña</label>
-                                    <input type="text" class="form-control" name="us__contraseña" id="exampleInputEmail1" 
+                                    <input type="text" class="form-control" name="contraseña" id="exampleInputEmail1" required
+                                           placeholder="Ingrese su contraseña">
+                                    
+                                    <label for="exampleInputEmail1">Dirección</label>
+                                    <input type="text" class="form-control" name="direccion" id="exampleInputEmail1" required
                                            placeholder="Ingrese su contraseña">
 
                                     <label for="exampleInputEmail1">Telefono</label>
-                                    <input type="text" class="form-control" name="us_telefono" id="exampleInputEmail1" 
+                                    <input type="text" class="form-control" name="telefono" id="exampleInputEmail1" required
                                            placeholder="Ingrese su telefono">
                                 </div>                               
                              <input class="botons" type="submit" value="Registrar">
                             </form>
-                            
-                            
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
