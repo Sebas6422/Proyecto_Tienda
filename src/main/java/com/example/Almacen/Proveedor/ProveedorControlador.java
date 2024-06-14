@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.List;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.qos.logback.classic.Logger;
 
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -37,7 +35,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class ProveedorControlador {
     @Autowired
     private IProveedorService service;
-    private static Logger logger = (Logger) LoggerFactory.getLogger(ProveedorControlador.class);
+    //private static Logger logger = (Logger) LoggerFactory.getLogger(ProveedorControlador.class);
+
+    @Autowired
+    private IProveedor iProveedor;
 
     @GetMapping("/proveedores")
     public String Mostrar(Model model) {
@@ -122,7 +123,7 @@ public class ProveedorControlador {
 
         service.Guardar(prov);
 
-        return Mostrar(model);
+        return "redirect:/proveedor/proveedores";
     }
 
 
@@ -141,7 +142,6 @@ public class ProveedorControlador {
     public String editarProveedor(@RequestParam("id") int id,
                                 Model model) {
         Optional<Proveedor> proveedorOptional = service.ConsultarId(id);
-        logger.info("-------------------Si llega editar");
         if (proveedorOptional.isPresent()) {
             Proveedor proveedor = proveedorOptional.get();
             model.addAttribute("proveedor", proveedor);
@@ -154,43 +154,49 @@ public class ProveedorControlador {
        
     @PostMapping("/actualizarProveedor")
     public String actualizarProveedor(@RequestParam("id") int id,
-                                      @RequestParam("prov_codigo") String codigo,
-                                      @RequestParam("prov_nombre") String nombre,
-                                      @RequestParam("prov_marca") String marca,
-                                      @RequestParam("prov_celular") String celular,
-                                      @RequestParam("prov_telefono") String telefono,
-                                      @RequestParam("prov_direccion") String direccion,
-                                      @RequestParam("prov_ciudad") String ciudad,
-                                      @RequestParam("prov_estado") String estado,
-                                      @RequestParam("prov_img") MultipartFile img,
-                                      Model model) {
-        Proveedor prov = new Proveedor();
+                                    @RequestParam("prov_codigo") String codigo,
+                                    @RequestParam("prov_nombre") String nombre,
+                                    @RequestParam("prov_marca") String marca,
+                                    @RequestParam("prov_celular") String celular,
+                                    @RequestParam("prov_telefono") String telefono,
+                                    @RequestParam("prov_direccion") String direccion,
+                                    @RequestParam("prov_ciudad") String ciudad,
+                                    @RequestParam("prov_estado") String estado,
+                                    @RequestParam("prov_img") MultipartFile img,
+                                    @RequestParam("imagenExistenteP") int imagenExistente,
+                                    Model model) {
+        Proveedor proveedor = new Proveedor();
 
-        logger.info("-------------------Si llega actualizar");
-        if(!img.isEmpty()){
-            try{
+        if (!img.isEmpty()) {
+            try {
                 byte[] imgBytes = img.getBytes();
                 Blob imgBlob = new SerialBlob(imgBytes);
-                prov.setProv_img(imgBlob);
-            }catch(IOException | SQLException e){
+                proveedor.setProv_img(imgBlob);
+            } catch (IOException | SQLException e) {
                 e.printStackTrace();
             }
+        } else {
+            // Usar la imagen existente
+            Proveedor proveedorExistente = iProveedor.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+            proveedor.setProv_img(proveedorExistente.getProv_img());
         }
 
-        prov.setId(id);
-        prov.setProv_codigo(codigo);
-        prov.setProv_nombre(nombre);
-        prov.setProv_marca(marca);
-        prov.setProv_celular(celular);
-        prov.setProv_telefono(telefono);
-        prov.setProv_direccion(direccion);
-        prov.setProv_ciudad(ciudad);
-        prov.setProv_estado(estado);
-        
-        service.Guardar(prov);
+        proveedor.setId(id);
+        proveedor.setProv_codigo(codigo);
+        proveedor.setProv_nombre(nombre);
+        proveedor.setProv_marca(marca);
+        proveedor.setProv_celular(celular);
+        proveedor.setProv_telefono(telefono);
+        proveedor.setProv_direccion(direccion);
+        proveedor.setProv_ciudad(ciudad);
+        proveedor.setProv_estado(estado);
+
+        service.Guardar(proveedor);
 
         return Mostrar(model);
     }
+
     
 
     @PostMapping("/buscar")
