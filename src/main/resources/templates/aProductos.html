@@ -136,13 +136,7 @@
                                                     <img th:src="@{/producto/getImage/{id}(id=${producto.produc_id})}" alt="imagenProducto" style="width: 100px; height: 100px;">
                                                 </td>
                                                 <td>
-                                                    <form action="Procesa" method="get">
-                                                        <input type="hidden" name="grupo" value="productos">
-                                                        <input type="hidden" name="opcion" value="editar">
-                                                        <input type="hidden" name="principal">
-
-                                                        <button type="submit" class="btn btn-primary">Editar</button>
-                                                    </form>   
+                                                    <a th:href="@{/producto/editarProducto(id=${producto.produc_id})}" target="_self" class="btn btn-small btn-primary">EDITAR</a>
                                                 </td>
                                                 <td>
                                                     <form action="Procesa" method="post">
