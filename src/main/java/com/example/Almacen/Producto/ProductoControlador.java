@@ -41,6 +41,9 @@ public class ProductoControlador {
 
     @Autowired
     private IProductoService service;
+    
+    @Autowired
+    private IProducto iProducto;
 
     @Autowired
     private ICategoria_Producto cate;
@@ -139,16 +142,17 @@ public class ProductoControlador {
     }
 
     @PostMapping("/actualizarProducto")
-    public String actualizarProducto(@RequestParam("id") int id,
-                                     @RequestParam("produc_nombre") String nombre,
-                                     @RequestParam("produc_tamanho") String tamanho,
-                                     @RequestParam("produc_caracteristica") String caracteristica,
-                                     @RequestParam("produc_precio") Double precio,
-                                     @RequestParam("produc_stock") String stock,
-                                     @RequestParam("produc_img") MultipartFile img,
-                                     @RequestParam("categoria_producto") Integer cat_producto,
-                                     @RequestParam("proveedor_id") Integer proveedor_id,
-                                     Model model) {
+    public String actualizarProducto(@RequestParam("produc_id") int id,
+                                    @RequestParam("produc_nombre") String nombre,
+                                    @RequestParam("produc_tamanho") String tamanho,
+                                    @RequestParam("produc_caracteristica") String caracteristica,
+                                    @RequestParam("produc_precio") Double precio,
+                                    @RequestParam("produc_stock") String stock,
+                                    @RequestParam("produc_img") MultipartFile img,
+                                    @RequestParam("imagenExistente") String imagenExistente,
+                                    @RequestParam("categoria_producto") Integer cat_producto,
+                                    @RequestParam("proveedor_id") Integer proveedor_id,
+                                    Model model) {
         Producto producto = new Producto();
 
         if (!img.isEmpty()) {
@@ -159,6 +163,10 @@ public class ProductoControlador {
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
             }
+        } else {
+            // Usar la imagen existente
+            Producto productoExistente = iProducto.findById(id).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+            producto.setProduc_img(productoExistente.getProduc_img());
         }
 
         producto.setProduc_id(id);

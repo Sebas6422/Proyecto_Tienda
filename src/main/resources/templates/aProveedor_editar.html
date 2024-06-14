@@ -64,6 +64,7 @@
                                            <form th:object="${proveedor}" action="/proveedor/actualizarProveedor" method="post" enctype="multipart/form-data">
                                                  <input type="hidden" name="opcion" value="editar">
                                                  <input type="hidden" name="grupo" value="proveedores">
+                                                 <input type="hidden" name="imagenExistenteP" th:value="${proveedor.id}">
                                                  
                                                 <div class="form-group">
                                                     <label for="formGroupExampleInput">Proveedor ID</label>
