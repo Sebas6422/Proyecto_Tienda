@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpSession;
 
 
 
+
 @Controller
 public class Controlador {
 
@@ -67,7 +68,7 @@ public class Controlador {
     }
     
     @GetMapping("/VolverLogin")
-    public String getMethodName(Model model) {
+    public String volverLogin(Model model) {
         model.addAttribute("error", "Sesión expirada");
         return"Login";
     }

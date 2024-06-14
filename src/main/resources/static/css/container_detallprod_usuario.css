@@ -50,3 +50,14 @@
         margin-left: 7rem;;
     }
 }
+
+/* PARA QUITAR EL ESTILO DEL BOTON DE BOOTSTRAP */
+.close {
+    border: none; /* Elimina el borde */
+    background-color: transparent; /* Fondo transparente para que no haya color de fondo */
+    padding: 0; /* Elimina el relleno para que el botón se ajuste al tamaño del ícono */
+}
+                           
+.close:focus {
+    outline: none; /* Elimina el contorno al enfocar el botón */
+}
