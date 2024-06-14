@@ -198,4 +198,44 @@ public class Controlador {
         }
         return "aPedidos";
     }
+
+    @GetMapping("/VendedorBienvenida")
+    public String v_bienvenida()
+    {
+        return "vBienvenida"; 
+    }
+    @GetMapping("/VendedorProductos")
+    public String v_productos()
+    {
+        return "vProductos"; 
+    }
+    @GetMapping("/VendedorPuntoVenta")
+    public String v_puntoventa()
+    {
+        return "vPuntoVenta"; 
+    }
+    @GetMapping("/VendedorVentas")
+    public String v_ventas()
+    {
+        return "vVentas"; 
+    }
+    @GetMapping("/VendedorPedidos")
+    public String v_pedidos()
+    {
+        return "vPedidos"; 
+    }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
