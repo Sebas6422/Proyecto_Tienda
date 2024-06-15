@@ -120,17 +120,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td> listausuarios.get(i).getUs_dni() %></td>
-                                                        <td><%= listausuarios.get(i).getUs_correo() %></td>
-                                                        <td><%= listausuarios.get(i).getUs_nombre() %></td>
-                                                        <td><%= listausuarios.get(i).getUs_apellido() %></td>
-                                                        <td><%= listausuarios.get(i).getUs__contraseña() %></td>
-                                                        <td><%= listausuarios.get(i).getUs_roles() %></td>
-                                                        <td><%= listausuarios.get(i).getUs_direccion() %></td>
-                                                        <td><%= listausuarios.get(i).getUs_telefono() %></td>
-                                                          
-                                                            
+                                                    <tr th:each="cliente : ${clientes}">
+                                                        <td th:text="${cliente.us_id}"></td>
+                                                        <td th:text="${cliente.us_dni}"></td>
+                                                        <td th:text="${cliente.us_nombre}"></td>
+                                                        <td th:text="${cliente.us_apellido}"></td>
+                                                        <td th:text="${cliente.us_correo}"></td>
+                                                        <td th:text="${cliente.us_direccion}"></td>
+                                                        <td th:text="${cliente.us_telefono}"></td>
                                                         <td>
                                                             <form action="Procesa" method="get">
                                                                 <input type="hidden" name="grupo" value="usuarios">

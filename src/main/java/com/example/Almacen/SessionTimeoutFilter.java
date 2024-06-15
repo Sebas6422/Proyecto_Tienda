@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 public class SessionTimeoutFilter implements Filter{
-    private static final long SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutos
+    private static final long SESSION_TIMEOUT_MS = 3000* 60 * 1000; // 30 minutos
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

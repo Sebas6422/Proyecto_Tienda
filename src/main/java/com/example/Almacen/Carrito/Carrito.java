@@ -23,7 +23,7 @@ public class Carrito {
     private double carr_subtotal;
 
     @ManyToOne
-    @JoinColumn(name = "Usuario_us_dni", referencedColumnName = "us_dni")
+    @JoinColumn(name = "Usuario_us_id", referencedColumnName = "us_id")
     private Usuario usu;
 
     @ManyToOne
