@@ -1,6 +1,18 @@
 .letra{
 color: black;
 }
+.inpa{
+    width: 90%;
+}
 .inpb{
-    width: 30%;
+    width: 60px;
+}
+.c_listas{
+    overflow-x: scroll;
+}
+.btn{
+    background-color: #fe9f48;
+}
+.btn:hover{
+    background-color: #fe9f48;
 }
