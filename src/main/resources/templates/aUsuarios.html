@@ -109,22 +109,25 @@
                                             <table class="table table-striped table-hover">
                                                 <thead>
                                                     <tr>
+                                                        <th >N°</th>
+                                                        <th >ROL</th>
                                                         <th >DNI</th>
-                                                        <th >CORREO</th>
                                                         <th >NOMBRE</th>
                                                         <th >APELLIDO</th>
-                                                        <th >CONTRASEÑA</th>
-                                                         <th >ROL</th>
+                                                        <th >CORREO</th>
                                                         <th >DIRECCION</th>
                                                         <th >TELEFONO</th>
+                                                        <th >EDITAR</th>
+                                                        <th >ELIMINAR</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr th:each="cliente : ${clientes}">
                                                         <td th:text="${cliente.us_id}"></td>
+                                                        <td>numerorol</td>
                                                         <td th:text="${cliente.us_dni}"></td>
                                                         <td th:text="${cliente.us_nombre}"></td>
-                                                        <td th:text="${cliente.us_apellido}"></td>
+                                                        <td th:text="${cliente.us_apellido}"></td>                                                      
                                                         <td th:text="${cliente.us_correo}"></td>
                                                         <td th:text="${cliente.us_direccion}"></td>
                                                         <td th:text="${cliente.us_telefono}"></td>
@@ -133,7 +136,7 @@
                                                                 <input type="hidden" name="grupo" value="usuarios">
                                                                 <input type="hidden" name="opcion" value="editar">
                                                                 <input type="hidden" name="principal" value="<%= listausuarios.get(i).getUs_dni() %>">
-                                                                    <button type="submit" class="btn btn-small btn-primary">EDITAR</button>
+                                                                    <button type="submit" class="btn btn-small btn-outline-primary" style="background-color: #fe9f48;">EDITAR</button>
                                                             </form>
                                                             
                                                         </td>
@@ -143,7 +146,7 @@
                                                                 <input type="hidden" name="opcion" value="eliminar">
                                                                 <input type="hidden" name="grupo" value="usuarios">
                                                                 <input type="hidden" name="us_dni" value="<%= listausuarios.get(i).getUs_dni() %>">
-                                                                <button type="submit" class="btn btn-small btn-danger">ELIMINAR</button>
+                                                                <button type="submit" class="btn btn-small btn-outline-danger" style="background-color: #fe9f48;">ELIMINAR</button>
                                                             </form>
                                                             
                                                         </td>
@@ -153,7 +156,7 @@
                      <form action="Procesa" method="get">
                <input type="hidden" name="opcion" value="agregar">
          <input type="hidden" name="grupo" value="usuarios">
-                    <button type="submit" class="btn btn-success">Registrar</button>
+                    <button type="submit" class="btn btn-outline-success" style="background-color: #fe9f48;">Registrar</button>
                 </form>           
 
                                            
