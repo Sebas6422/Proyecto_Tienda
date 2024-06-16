@@ -209,6 +209,11 @@ public class Controlador {
     {
         return "vBienvenida"; 
     }
+    @GetMapping("/VendedorClientes")
+    public String v_clientes()
+    {
+        return "vClientes"; 
+    }
     @GetMapping("/VendedorProductos")
     public String v_productos()
     {

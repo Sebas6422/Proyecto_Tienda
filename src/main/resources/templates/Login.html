@@ -64,7 +64,7 @@
                     <div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="public_index.jsp" style="color:#fe9f48">Inicio</a></li>
+                                <li class="breadcrumb-item"><a href="public_index.jsp" >Inicio</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Iniciar Sesión</li>
                             </ol>
                         </nav>
@@ -85,35 +85,35 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-6 my-5">
-                            <div class="d-flex justify-content-center align-items-center">
-                                <img class="img-reponsive imagen rounded" style="width: 70%;" th:src="@{/imagenes/psyduckLogin.jpg}">
+                            <div class="d-flex justify-content-center align-items-center mx-4">
+                                <img class="img-reponsive imagen rounded" style="width: 100%;" th:src="@{/imagenes/psyduckLogin.jpg}">
                             </div>
                         </div>
                         <div class="col-lg-6 my-5">
-                            <div class="d-flex justify-content-center align-items-center h-100">
+                            <div class="d-flex justify-content-center align-items-center h-100 mx-4">
                                 <div class="card rounded w-100">
-                                    <div class="card-header bg-light" style="background-color: #fe9f48 !important;">
+                                    <div class="card-header bg-secondary">
                                         <h6 class="font-weight-bold mb-0 text-white">Iniciar Sesión</h6>
                                     </div>
                                     <div class="card-body">
                                         <form id="login" action="/usuario/ingresarLogin" method="post">
-                                            <div class="form-group">
+                                            <div class="form-group mx-4">
                                                 <label for="exampleInputEmail1">Correo: </label>
                                                 <input type="text" class="form-control my-2" name="us_correo" aria-describedby="emailHelp"
                                                        placeholder="Ingrese el correo del usuario" maxlength="40" required>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mx-4">
                                                 <label for="exampleInputPassword1">Contraseña: </label>
                                                 <input type="password" class="form-control my-2" name="us_contrasenha"
                                                        placeholder="Ingrese la contraseña" id="password" required>
-                                                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                                                <i class="fas fa-eye-slash toggle-password" id="togglePassword"></i>
                                             </div>
-                                            <div class="mt-2">
-                                                <div class="g-recaptcha" data-sitekey="6LcUXuUpAAAAAOA8xivYtflvxXfbOfez4jutVZsq"></div>
+                                            <div class="mt-3">
+                                                <div class="g-recaptcha mx-4" data-sitekey="6LcUXuUpAAAAAOA8xivYtflvxXfbOfez4jutVZsq"></div>
                                             </div>
-                                            <button type="submit" class="btn btn-secondary mt-3 mx-4" style="background-color: #fe9f48;width: 45%;">Iniciar Sesión</button>
-                                            <a href="" class="btn btn-small btn-primary mt-3" data-toggle="modal"
-                                               data-target="#exampleModalCenter" style="background-color: #fe9f48;width: 45%;">Registrarse</a>
+                                            <button type="submit" class="mt-3 mx-4 btn btn-outline-secondary form-control" style="width: 45%;">Iniciar Sesión</button>
+                                            <a href="" class="btn btn-outline-secondary form-control mt-3" data-toggle="modal"
+                                               data-target="#exampleModalCenter" style="width: 45%;">Registrarse</a>
                                             <div th:if="${error}" th:text="${error}" style="color: red;"></div>
                                             <div th:if="${success}" th:text="${success}" style="color: green;"></div>
                                         </form>
@@ -138,8 +138,8 @@
                                                     const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
                                                     passwordField.setAttribute('type', type);
                                     
-                                                    this.classList.toggle('fa-eye');
                                                     this.classList.toggle('fa-eye-slash');
+                                                    this.classList.toggle('fa-eye');
                                                 });
                                             });
                                         </script>
