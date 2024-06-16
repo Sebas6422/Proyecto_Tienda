@@ -27,6 +27,7 @@ import com.example.Almacen.Proveedor.IProveedor;
 import com.example.Almacen.Proveedor.IProveedorService;
 import com.example.Almacen.Proveedor.Proveedor;
 
+
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RequestMapping("/producto/")
@@ -189,5 +190,19 @@ public class ProductoControlador {
         service.Guardar(producto);
 
         return "redirect:/producto/productos/";
+    }
+    //Para el Cliente
+    @GetMapping("/VerMasProducto")
+    public String verMasProduct(@RequestParam("idP") int id,
+                                Model model){
+
+        Optional<Producto> productoOptional = service.ConsultarId(id);
+        if (productoOptional.isPresent()) {
+            Producto producto = productoOptional.get();
+            model.addAttribute("producto", producto);
+            return "uDetalleProducto";
+        }else{
+            return "error";
+        }
     }
 }

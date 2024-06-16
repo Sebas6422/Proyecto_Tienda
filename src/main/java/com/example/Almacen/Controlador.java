@@ -20,9 +20,6 @@ import com.example.Almacen.Usuario.UsuarioControlador;
 import jakarta.servlet.http.HttpSession;
 
 
-
-
-
 @Controller
 public class Controlador {
 
@@ -58,9 +55,8 @@ public class Controlador {
             return "Login";  
         }
     }
-
     @GetMapping("/Cliente")
-    public String cliente_index(HttpSession session) {
+    public String cliente_index(HttpSession session, Model model) {
         if(session.getAttribute("correoUsuarioC") == null || session.getAttribute("tokenSesionC")== null){
             return "error";
         }
@@ -68,6 +64,8 @@ public class Controlador {
         if (session.getAttribute("correoUsuarioC") == null && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
+        List<Producto> productos = serviceP.Listar();
+        model.addAttribute("productos", productos); 
         return "uLoginUsuario";
     }
     
