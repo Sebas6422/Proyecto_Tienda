@@ -20,13 +20,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Almacen.Carrito.Carrito;
+import com.example.Almacen.Carrito.ICarritoService;
 import com.example.Almacen.Categoria_Producto.Categoria_Producto;
 import com.example.Almacen.Categoria_Producto.ICategoria_Producto;
 import com.example.Almacen.Categoria_Producto.ICategoria_ProductoService;
+import com.example.Almacen.Estado.Estado;
+import com.example.Almacen.Estado.IEstado;
 import com.example.Almacen.Proveedor.IProveedor;
 import com.example.Almacen.Proveedor.IProveedorService;
 import com.example.Almacen.Proveedor.Proveedor;
-
+import com.example.Almacen.Usuario.IUsuario;
+import com.example.Almacen.Usuario.Usuario;
 
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -41,6 +46,9 @@ public class ProductoControlador {
     private ICategoria_ProductoService serviceCat;
 
     @Autowired
+    private ICarritoService serviceC;
+
+    @Autowired
     private IProductoService service;
     
     @Autowired
@@ -50,7 +58,13 @@ public class ProductoControlador {
     private ICategoria_Producto cate;
 
     @Autowired
+    private IUsuario usu;
+
+    @Autowired
     private IProveedor prov;
+
+    @Autowired
+    private IEstado est;
 
     @GetMapping("/productos/")
     public String Mostrar(Model model) {
@@ -82,7 +96,7 @@ public class ProductoControlador {
                                     @RequestParam("produc_tamanho") String tamanho,
                                     @RequestParam("produc_caracteristica") String caracteristica,
                                     @RequestParam("produc_precio") Double precio,
-                                    @RequestParam("produc_stock") String stock,
+                                    @RequestParam("produc_stock") int stock,
                                     @RequestParam("produc_img") MultipartFile img,
                                     @RequestParam("categoria_producto") Integer cat_producto,
                                     @RequestParam("proveedor_id") Integer proveedor_id,
@@ -148,7 +162,7 @@ public class ProductoControlador {
                                     @RequestParam("produc_tamanho") String tamanho,
                                     @RequestParam("produc_caracteristica") String caracteristica,
                                     @RequestParam("produc_precio") Double precio,
-                                    @RequestParam("produc_stock") String stock,
+                                    @RequestParam("produc_stock") int stock,
                                     @RequestParam("produc_img") MultipartFile img,
                                     @RequestParam("imagenExistente") String imagenExistente,
                                     @RequestParam("categoria_producto") Integer cat_producto,
@@ -201,6 +215,59 @@ public class ProductoControlador {
             Producto producto = productoOptional.get();
             model.addAttribute("producto", producto);
             return "uDetalleProducto";
+        }else{
+            return "error";
+        }
+    }
+
+    @PostMapping("/AñadirCarrito")
+    public String agregarCarrito(@RequestParam("producto_id") int idP,
+                                      @RequestParam("usuario_id") int idU,
+                                      @RequestParam("cantidad") int cant){
+        Optional<Producto> produOptional = service.ConsultarId(idP);
+        Carrito carrito = new Carrito();
+        Double subtotal = 0.0;
+
+        if(produOptional.isPresent()){
+            Producto producto = produOptional.get();
+            Producto actualizarProducto = new Producto();
+            // Actualizar stock de producto
+            actualizarProducto.setProduc_id(producto.getProduc_id());
+            actualizarProducto.setProduc_nombre(producto.getProduc_nombre());
+            actualizarProducto.setProduc_tamanho(producto.getProduc_tamanho());
+            actualizarProducto.setProduc_caracteristica(producto.getProduc_caracteristica());
+            actualizarProducto.setProduc_precio(producto.getProduc_precio());
+                // ---Cambiar precio
+                int newStock = producto.getProduc_stock() - cant;
+                actualizarProducto.setProduc_stock(newStock);
+                //----------------------------------------
+            actualizarProducto.setProduc_img(producto.getProduc_img());
+            actualizarProducto.setProveedor(producto.getProveedor());
+            actualizarProducto.setCategoriaProducto(producto.getCategoriaProducto());
+
+            service.Guardar(actualizarProducto);
+
+            subtotal = cant * producto.getProduc_precio();
+
+            carrito.setCarr_subtotal(subtotal);
+
+            Usuario usuario = usu.findById(idU)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            
+            carrito.setUsu(usuario);
+
+            Producto produc = iProducto.findById(idP)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+            
+            carrito.setProducto(produc);
+
+            Estado estado = est.findById(1)
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+            
+            carrito.setEstado(estado);
+
+            serviceC.Guardar(carrito);
+            return "redirect:/";
         }else{
             return "error";
         }
