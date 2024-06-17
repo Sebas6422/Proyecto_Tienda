@@ -25,7 +25,7 @@ public class Producto {
     private String produc_tamanho;
     private String produc_caracteristica;
     private double produc_precio;
-    private String produc_stock;
+    private int produc_stock;
     private Blob produc_img;
 
     @ManyToOne

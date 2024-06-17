@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Bodega Janys</title>
+        <link rel="stylesheet" th:href="@{/css/2e_Upedidos.css}"> 
+
+
+        <link rel="stylesheet" th:href="@{/css/container_detallprod_usuario.css}">
+        <link rel="stylesheet" th:href="@{/css/container_listprod_usuario.css}">
+        <link rel="stylesheet" th:href="@{/css/e_Upedidos.css}">
+        <link rel="stylesheet" th:href="@{/css/header.css}">
+        <link rel="stylesheet" th:href="@{/css/gstyle.css}">
+        <link rel="stylesheet" th:href="@{/css/footer.css}">
+        <link rel="stylesheet" th:href="@{/css/imagenes.css}">
+        <link rel="stylesheet" th:href="@{/css/indexprincipal.css}">
+
+
+
+        <title>Bodega Jany´s</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+
+        <script src="https://kit.fontawesome.com/cdfc097754.js" crossorigin="anonymous"></script>
+
+        <!--linkeando boostrap5-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" ></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+        <!--inicio de sesion-->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+
+        <style>
+            /* Estilos para la imagen */
+            img.imagen-pequena {
+                width: auto; /* Ancho de la imagen */
+                height: auto; /* Altura automática para mantener la proporción */
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div th:replace="~{uHeaderUsuario :: #header_login_usuario}"></div>
+        <div th:replace="~{uNavegador :: #usuario_navegador}"></div>
+        <div class="container-fluid texto_rastro">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="texto">Detalle de Producto</label>
+                </div>
+                <div class="col-sm-6 rastro">
+                    <div>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="public_in_usuario.jsp" style="color:#fe9f48">Home</a></li>
+                                <li class="breadcrumb-item"><a href="public_productos_lista.jsp" style="color:#fe9f48">Productos</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Detalle de Producto</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--CONTENEDOR PRINCIPAL-->
+        <div class="container-fluid bg">
+
+            <div class="row">
+
+                <div class="col-sm-3"></div>     
+                <div class="col-sm-6">
+                    <div class="card mb-3" style="width: 100%; margin-top: 20px; padding: 20px" th:object="${proveedor}">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img th:src="@{/producto/getImage/{id}(id=${producto.produc_id})}" alt="imagenProducto" class="imagen-pequena">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body" style="padding: 0px 50px;">
+                                    <form action="/producto/AñadirCarrito" method="post">
+                                        <input type="hidden" th:field="${producto.produc_id}" name="producto_id">
+
+                                        <h5 class="card-title" th:text="${producto.produc_nombre}"></h5>
+
+                                        <p class="card-text" th:text="'Códifo de Producto: ' + ${producto.produc_id}"></p>
+                                        <p class="card-text" th:text="'Stock disponible: ' + ${producto.produc_stock}"></p>
+                                        <h5 class="card-title" th:text="'Precio: ' + ${producto.produc_precio}"></h5>
+                                        <div class="form-group" style="margin-top: 20px;">
+                                            <label for="formGroupExampleInput2">Cantidad</label>
+                                            <input type="number" class="form-control" id="formGroupExampleInput2" name="cantidad" value="1" required="">                          
+                                        </div>
+
+                                        <button  type="submit" class="btn btn-secondary" style="margin-top: 15px;"><i class="fa-solid fa-cart-plus ico_btn" style="color: #f1f1f1;"></i>Añadir al carrito</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="col-sm-3"></div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-3"></div>     
+                <div class="col-sm-6 ">
+                    <div class="cont_tabla">
+                        <p class="texto_tabla">Información Adicional: </p>
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>-Tamaño</td>
+                                    <td> prod.getProduc_tamaño() %></td>
+                                </tr>
+                                <tr>
+                                    <td>- Marca</td>
+                                    <td> prod.getProduc_marca() %></td>
+                                </tr>
+                                <tr>
+                                    <td>- Caracteristica</td>
+                                    <td> prod.getProduc_caracteristica() %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>- En Oferta</td>
+                                    <td>- No </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>  
+                <div class="col-sm-3"></div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-4"></div>     
+                <div class="col-sm-4">
+                    <h4 class="pro_rela">PRODUCTOS RELACIONADOS</h4>
+                </div>  
+                <div class="col-sm-4"></div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-3"></div>     
+                <div class="col-sm-6">
+                    <div class="card-group cont_nuevo">
+                        <div class="card nuevo">
+                            <img src="" alt="" class="imagen-pequena">
+                            <div class="card-body">
+                                <center>
+                                    <h5 class="card-title"> prod.getProduc_nombre() %></h5>
+                                    <p >Stock:  prod.getProduc_cantidad() %></p>
+                                    <p >Precio :  S/. prod.getProduc_precio() %></p>   
+                                        <form action="ProductosServlet" method="get">
+                                 <input type="hidden" name="grupo" value="productos">
+                                  <input type="hidden" name="opcion" value="ver">
+                                                       
+                               <input type="hidden" name="principal" value="">
+                                <input type="hidden" name="principal2" value="">
+                                <input type="hidden" name="principal3" value="">
+                                  
+                                <button  type="submit" class="btn btn-outline-secondary form-control">Ver más</button>  
+                            </form>
+                                </center>
+
+                            </div>                        
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-3"></div>
+            </div>
+
+
+
+        </div>
+        <div th:replace="~{uFooter :: #usuario_footer}"></div>
+    </body>
+</html>
+
