@@ -93,7 +93,9 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body" style="padding: 0px 50px;">
-                                    <form action="/producto/agregarCarrito" method="post">
+                                    <form action="/producto/AñadirCarrito" method="post">
+                                        <input type="hidden" th:field="${producto.produc_id}" name="producto_id">
+
                                         <h5 class="card-title" th:text="${producto.produc_nombre}"></h5>
 
                                         <p class="card-text" th:text="'Códifo de Producto: ' + ${producto.produc_id}"></p>
@@ -101,7 +103,7 @@
                                         <h5 class="card-title" th:text="'Precio: ' + ${producto.produc_precio}"></h5>
                                         <div class="form-group" style="margin-top: 20px;">
                                             <label for="formGroupExampleInput2">Cantidad</label>
-                                            <input type="number" class="form-control" id="formGroupExampleInput2" name="tmp_cantidad" value="1" required="">                          
+                                            <input type="number" class="form-control" id="formGroupExampleInput2" name="cantidad" value="1" required="">                          
                                         </div>
 
                                         <button  type="submit" class="btn btn-secondary" style="margin-top: 15px;"><i class="fa-solid fa-cart-plus ico_btn" style="color: #f1f1f1;"></i>Añadir al carrito</button>

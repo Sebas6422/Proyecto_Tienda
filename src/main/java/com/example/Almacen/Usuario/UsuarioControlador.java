@@ -17,6 +17,7 @@ import com.example.Almacen.Encriptador.Hash;
 import com.example.Almacen.Rol.IRol;
 import com.example.Almacen.Rol.Rol;
 
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -74,6 +75,7 @@ public class UsuarioControlador {
         return "Login";
     }
 
+
     @PostMapping("/ingresarLogin")
     public String verificarLogin(@RequestParam(value = "us_correo", required = false) String correo,
                                  @RequestParam(value = "us_contrasenha", required = false) String contra,
@@ -112,6 +114,7 @@ public class UsuarioControlador {
             if (usuario.getUs_correo().equals(correo)) {
                 userFound = true;
                 if (usuario.getUs_contrasenha().equals(contra)) {
+                    Usuario usuarioLo = usuario;
                     if (sesionActivaA(correo) || sesionActivaU(correo)) {
                         session.setAttribute("error", "Esta cuenta ya está logueada.");
                         return "redirect:/usuario/ingresarLogin";
@@ -130,6 +133,7 @@ public class UsuarioControlador {
                         // Verifica al usuario
                         String tokenSesion = UUID.randomUUID().toString();
                         sesionesActivasU.put(correo, tokenSesion);
+                        session.setAttribute("usuarioLo", usuarioLo);
                         session.setAttribute("correoUsuarioC", correo);
                         session.setAttribute("tokenSesionC", tokenSesion);
                         // Reiniciar los intentos fallidos al ingresar exitosamente al login

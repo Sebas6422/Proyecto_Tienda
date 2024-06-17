@@ -3,6 +3,7 @@ package com.example.Almacen.Producto;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,8 @@ import com.example.Almacen.Proveedor.IProveedorService;
 import com.example.Almacen.Proveedor.Proveedor;
 import com.example.Almacen.Usuario.IUsuario;
 import com.example.Almacen.Usuario.Usuario;
+
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -221,36 +224,21 @@ public class ProductoControlador {
     }
 
     @PostMapping("/AñadirCarrito")
-    public String agregarCarrito(@RequestParam("producto_id") int idP,
-                                      @RequestParam("usuario_id") int idU,
-                                      @RequestParam("cantidad") int cant){
+    public String agregarCarrito(@RequestParam("produc_id") int idP,
+                                      @RequestParam("cantidad") int cant,
+                                      HttpSession session,
+                                      Model model){
         Optional<Producto> produOptional = service.ConsultarId(idP);
         Carrito carrito = new Carrito();
         Double subtotal = 0.0;
 
         if(produOptional.isPresent()){
             Producto producto = produOptional.get();
-            Producto actualizarProducto = new Producto();
-            // Actualizar stock de producto
-            actualizarProducto.setProduc_id(producto.getProduc_id());
-            actualizarProducto.setProduc_nombre(producto.getProduc_nombre());
-            actualizarProducto.setProduc_tamanho(producto.getProduc_tamanho());
-            actualizarProducto.setProduc_caracteristica(producto.getProduc_caracteristica());
-            actualizarProducto.setProduc_precio(producto.getProduc_precio());
-                // ---Cambiar precio
-                int newStock = producto.getProduc_stock() - cant;
-                actualizarProducto.setProduc_stock(newStock);
-                //----------------------------------------
-            actualizarProducto.setProduc_img(producto.getProduc_img());
-            actualizarProducto.setProveedor(producto.getProveedor());
-            actualizarProducto.setCategoriaProducto(producto.getCategoriaProducto());
-
-            service.Guardar(actualizarProducto);
-
             subtotal = cant * producto.getProduc_precio();
 
             carrito.setCarr_subtotal(subtotal);
-
+            Usuario usua = (Usuario) session.getAttribute("usuarioLo");
+            int idU = usua.getUs_id();
             Usuario usuario = usu.findById(idU)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             
@@ -265,11 +253,78 @@ public class ProductoControlador {
                 .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
             
             carrito.setEstado(estado);
+            carrito.setCantidad(cant);
 
             serviceC.Guardar(carrito);
-            return "redirect:/";
+
+            //para mostrar el carrito del cliente actual
+            List<Carrito> carritos = serviceC.Listar();
+            List<Carrito> carritoC = new ArrayList<>();
+            for (Carrito carr : carritos){
+                if (carr.getUsu() == usuario) {
+                    carritoC.add(carr);
+                }
+            }
+            model.addAttribute("carritosC", carritoC);
+            return "/uCarritoCliente";
         }else{
             return "error";
         }
+    }
+
+    @PostMapping("/ComprarProducto")
+    public String comprarProductos(@RequestParam("id_usu") int id){
+        return "redirect:/Cliente";
+    }
+
+
+    //Validacion de compra
+    public static boolean prodcantidad(String cantidad) {
+        if (cantidad == null || cantidad.isEmpty()) {
+            return false;
+        }
+        return cantidad.matches("^[1-9]\\d*$");
+    }
+
+    public static boolean nombretarjeta(String nombre) {
+        if (nombre == null || nombre.isEmpty()) {
+            return false;
+        }
+        return nombre.matches("^[a-zA-Z\\s]+$");
+    }
+
+    public static boolean numerotarjeta(String numero) {
+        if (numero == null || numero.isEmpty()) {
+            return false;
+        }
+        return numero.matches("^[45]\\d{15}$");
+    }
+
+    public static boolean fechaexp(String fecha) {
+        if (fecha == null || fecha.isEmpty()) {
+            return false;
+        }
+        return fecha.matches("^(0[1-9]|1[0-2])/\\d{2}$");
+    }
+
+    public static boolean codseguridad(String cvv) {
+        if (cvv == null || cvv.isEmpty()) {
+            return false;
+        }
+        return cvv.matches("^\\d{3}$");
+    }
+
+    public static boolean metododepago(String metodoPago) {
+        if (metodoPago == null || metodoPago.isEmpty()) {
+            return false;
+        }
+        return metodoPago.matches("^(Contraentrega|Tarjeta)$");
+    }
+
+    public static boolean tipodemetodo(String metodoPago) {
+        if (metodoPago == null || metodoPago.isEmpty()) {
+            return false;
+        }
+        return metodoPago.matches("^(Yape|Plin|Visa|Mastercard|American_Express)$");
     }
 }

@@ -21,6 +21,7 @@ public class Carrito {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int carr_id;
     private double carr_subtotal;
+    private int cantidad;
 
     @ManyToOne
     @JoinColumn(name = "Usuario_us_id", referencedColumnName = "us_id")
