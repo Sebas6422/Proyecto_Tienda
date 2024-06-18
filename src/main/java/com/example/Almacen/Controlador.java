@@ -46,6 +46,7 @@ public class Controlador {
     
     @GetMapping("/Login")
     public String login(HttpSession session) {
+        //espero funcione
         if(session.getAttribute("correoUsuario") != null && session.getAttribute("tokenSesion") != null){
             return "aDashboard"; 
         }
