@@ -2,6 +2,7 @@ package com.example.Almacen.Usuario;
 
 import com.example.Almacen.Rol.Rol;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,10 @@ public class Usuario {
     private String us_dni;
     private String us_nombre;
     private String us_apellido;
+
+    @Column(unique = true)
     private String us_correo;
+    
     private String us_contrasenha;
     private String us_direccion;
     private String us_telefono;
