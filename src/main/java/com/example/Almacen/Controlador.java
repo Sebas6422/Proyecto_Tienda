@@ -43,7 +43,7 @@ public class Controlador {
 
     @GetMapping("/Login")
     public String login() {
-        return "/Login";
+        return "Login";
     }
 
     @GetMapping("/Cliente")
