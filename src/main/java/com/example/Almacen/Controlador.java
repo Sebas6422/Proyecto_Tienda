@@ -45,37 +45,8 @@ public class Controlador {
 
     
     @GetMapping("/Login")
-    public String login(HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("Usuario");
-        Object tokenSesion = session.getAttribute("tokenSesion");
-
-        // Verifica si 'usuario' es null
-        if (usuario == null) {
-            return "/Login";
-        }
-
-        // Verifica si 'tokenSesion' es null o vacío
-        if (tokenSesion == null || tokenSesion.toString().isEmpty()) {
-            return "/Login";
-        }
-
-        // Determina la página de entrada en función del rol del usuario
-        String entrada = "/Login"; // Valor por defecto
-        switch (usuario.getRol().getRol_id()) {
-            case 1:
-                entrada = "aIndexDashboard";
-                break;
-            case 2:
-                entrada = "uLoginUsuario";
-                break;
-            case 3:
-                entrada = "vBienvenida";
-                break;
-            default:
-                break;
-        }
-
-        return entrada;
+    public String login() {
+        return "/Login";
     }
 
     @GetMapping("/Cliente")
