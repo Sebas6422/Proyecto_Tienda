@@ -27,11 +27,11 @@
                         <div class="dropdown">
                             <div class="dropdown-toggle" role="button" id="dropdownMenuLink" 
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                <a class="text-dark">Administrador</a><span
+                                <a class="text-dark" th:text="${usuario.getRol().getRol_nombre()}"></a><span
                                     class="circle-icon bg-dark ml-1 "><i class="fa-solid fa-user"></i></span>
                             </div>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <li><a class="dropdown-item" th:href="@{/usuario/cerrarSesionA}">Cerrar Sesión</a></li>
+                                <li><a class="dropdown-item" th:href="@{/usuario/cerrarSesion}">Cerrar Sesión</a></li>
                             </ul>
                         </div>
                     </li>

@@ -46,22 +46,48 @@ public class Controlador {
     
     @GetMapping("/Login")
     public String login(HttpSession session) {
-        if(session.getAttribute("correoUsuario") != null && session.getAttribute("tokenSesion") != null){
-            return "aDashboard"; 
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        Object tokenSesion = session.getAttribute("tokenSesion");
+
+        // Verifica si 'usuario' es null
+        if (usuario == null) {
+            return "/Login";
         }
-        else if(session.getAttribute("correoUsuarioC") != null && session.getAttribute("tokenSesionC") != null){
-            return "uLoginUsuario";
-        }else{
-            return "Login";  
+
+        // Verifica si 'tokenSesion' es null o vacío
+        if (tokenSesion == null || tokenSesion.toString().isEmpty()) {
+            return "/Login";
         }
+
+        // Determina la página de entrada en función del rol del usuario
+        String entrada = "/Login"; // Valor por defecto
+        switch (usuario.getRol().getRol_id()) {
+            case 1:
+                entrada = "aIndexDashboard";
+                break;
+            case 2:
+                entrada = "uLoginUsuario";
+                break;
+            case 3:
+                entrada = "vBienvenida";
+                break;
+            default:
+                break;
+        }
+
+        return entrada;
     }
+
     @GetMapping("/Cliente")
     public String cliente_index(HttpSession session, Model model) {
-        if(session.getAttribute("correoUsuarioC") == null || session.getAttribute("tokenSesionC")== null){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
             return "error";
         }
-        boolean inicio = UsuarioControlador.verificarTokenSesionU(session.getAttribute("correoUsuarioC").toString(), session.getAttribute("tokenSesionC").toString());
-        if (session.getAttribute("correoUsuarioC") == null && !inicio ) {
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
         List<Producto> productos = serviceP.Listar();
@@ -78,25 +104,32 @@ public class Controlador {
     
     //CONTROLADORES PARA ADMINISTRACION
     @GetMapping("/AdminDashIn")
-    public String admin_indexDash(HttpSession session) {
-        if(session.getAttribute("correoUsuario") == null || session.getAttribute("tokenSesion") == null){
+    public String admin_indexDash(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
             return "error";
         }
-        boolean inicio = UsuarioControlador.verificarTokenSesionA(session.getAttribute("correoUsuario").toString(), session.getAttribute("tokenSesion").toString());
-        if (session.getAttribute("correoUsuario") == null && !inicio ) {
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
+        model.addAttribute("usuario", usuario);
         return "aIndexDashboard";  
     }
 
     @GetMapping("/a_Dashboard")
     public String dashboardA(HttpSession session)
     {
-        if(session.getAttribute("correoUsuario") == null || session.getAttribute("tokenSesion") == null){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
             return "error";
         }
-        boolean inicio = UsuarioControlador.verificarTokenSesionA(session.getAttribute("correoUsuario").toString(), session.getAttribute("tokenSesion").toString());
-        if (session.getAttribute("correoUsuario") == null && !inicio ) {
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
         return "aDashboard"; 
@@ -105,11 +138,14 @@ public class Controlador {
     @GetMapping("/AdminUsuarios")
     public String admin_usuarios(HttpSession session, Model model)
     {
-        if(session.getAttribute("correoUsuario") == null || session.getAttribute("tokenSesion") == null){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
             return "error";
         }
-        boolean inicio = UsuarioControlador.verificarTokenSesionA(session.getAttribute("correoUsuario").toString(), session.getAttribute("tokenSesion").toString());
-        if (session.getAttribute("correoUsuario") == null && !inicio ) {
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
         List<Usuario> usuarios = serviceU.Listar();
@@ -120,11 +156,14 @@ public class Controlador {
     @GetMapping("/AdminProductos")
     public String admin_productos(Model model, HttpSession session)
     {
-        if(session.getAttribute("correoUsuario") == null || session.getAttribute("tokenSesion") == null){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
             return "error";
         }
-        boolean inicio = UsuarioControlador.verificarTokenSesionA(session.getAttribute("correoUsuario").toString(), session.getAttribute("tokenSesion").toString());
-        if (session.getAttribute("correoUsuario") == null && !inicio ) {
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
         List<Producto> productos = serviceP.Listar();
@@ -134,11 +173,14 @@ public class Controlador {
 
     @GetMapping("/AdminProductRegistro")
     public String admin_product_registro(Model model, HttpSession session) {
-        if(session.getAttribute("correoUsuario") == null || session.getAttribute("tokenSesion").toString() == null){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
             return "error";
         }
-        boolean inicio = UsuarioControlador.verificarTokenSesionA(session.getAttribute("correoUsuario").toString(), session.getAttribute("tokenSesion").toString());
-        if (session.getAttribute("correoUsuario") == null && !inicio ) {
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
         List<Categoria_Producto> cat_productos = serviceC.Listar();
@@ -153,11 +195,14 @@ public class Controlador {
     @GetMapping("/AdminProveedores")
     public String admin_proveedores(Model model, HttpSession session)
     {
-        if(session.getAttribute("correoUsuario") == null || session.getAttribute("tokenSesion") == null){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
             return "error";
         }
-        boolean inicio = UsuarioControlador.verificarTokenSesionA(session.getAttribute("correoUsuario").toString(), session.getAttribute("tokenSesion").toString());
-        if (session.getAttribute("correoUsuario") == null && !inicio ) {
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
         List<Proveedor> proveedores = service.Listar();
@@ -168,11 +213,14 @@ public class Controlador {
 
     @GetMapping("/AdminProvRegistro")
     public String admin_prov_registro(HttpSession session) {
-        if(session.getAttribute("correoUsuario") == null || session.getAttribute("tokenSesion") == null){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
             return "error";
         }
-        boolean inicio = UsuarioControlador.verificarTokenSesionA(session.getAttribute("correoUsuario").toString(), session.getAttribute("tokenSesion").toString());
-        if (session.getAttribute("correoUsuario") == null && !inicio ) {
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
         return "aProveedor_registrar";
@@ -181,11 +229,14 @@ public class Controlador {
     @GetMapping("/AdminVentas")
     public String admin_ventas(HttpSession session)
     {
-        if(session.getAttribute("correoUsuario") == null || session.getAttribute("tokenSesion") == null){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
             return "error";
         }
-        boolean inicio = UsuarioControlador.verificarTokenSesionA(session.getAttribute("correoUsuario").toString(), session.getAttribute("tokenSesion").toString());
-        if (session.getAttribute("correoUsuario") == null && !inicio ) {
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
         return "aVentas";
@@ -194,44 +245,113 @@ public class Controlador {
     @GetMapping("/AdminPedidos")
     public String admin_pedidos(HttpSession session)
     {
-        if(session.getAttribute("correoUsuario") == null || session.getAttribute("tokenSesion") == null){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
             return "error";
         }
-        boolean inicio = UsuarioControlador.verificarTokenSesionA(session.getAttribute("correoUsuario").toString(), session.getAttribute("tokenSesion").toString());
-        if (session.getAttribute("correoUsuario") == null && !inicio ) {
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
         }
         return "aPedidos";
     }
 
     @GetMapping("/VendedorBienvenida")
-    public String v_bienvenida()
+    public String v_bienvenida(HttpSession session, Model model)
     {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
+            return "error";
+        }
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
+            return "redirect:/"; // Redirige al login si no hay usuario en sesión
+        }
+        model.addAttribute("usuario", usuario);
         return "vBienvenida"; 
     }
     @GetMapping("/VendedorClientes")
-    public String v_clientes()
+    public String v_clientes(HttpSession session, Model model)
     {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
+            return "error";
+        }
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
+            return "redirect:/"; // Redirige al login si no hay usuario en sesión
+        }
+        model.addAttribute("usuario", usuario);
         return "vClientes"; 
     }
     @GetMapping("/VendedorProductos")
-    public String v_productos()
+    public String v_productos(HttpSession session, Model model)
     {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
+            return "error";
+        }
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
+            return "redirect:/"; // Redirige al login si no hay usuario en sesión
+        }
+        model.addAttribute("usuario", usuario);
         return "vProductos"; 
     }
     @GetMapping("/VendedorPuntoVenta")
-    public String v_puntoventa()
+    public String v_puntoventa(HttpSession session, Model model)
     {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
+            return "error";
+        }
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
+            return "redirect:/"; // Redirige al login si no hay usuario en sesión
+        }
+        model.addAttribute("usuario", usuario);
         return "vPuntoVenta"; 
     }
     @GetMapping("/VendedorVentas")
-    public String v_ventas()
+    public String v_ventas(HttpSession session, Model model)
     {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
+            return "error";
+        }
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
+            return "redirect:/"; // Redirige al login si no hay usuario en sesión
+        }
+        model.addAttribute("usuario", usuario);
         return "vVentas"; 
     }
     @GetMapping("/VendedorPedidos")
-    public String v_pedidos()
+    public String v_pedidos(HttpSession session, Model model)
     {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String correoString = usuario.getUs_correo();
+        String tokeString = session.getAttribute("tokenSesion").toString();
+        if(usuario.equals(null) || tokeString.equals("")){
+            return "error";
+        }
+        boolean inicio = UsuarioControlador.verificarTokenSesionA(correoString, tokeString);
+        if (usuario.equals(null) && !inicio ) {
+            return "redirect:/"; // Redirige al login si no hay usuario en sesión
+        }
+        model.addAttribute("usuario", usuario);
         return "vPedidos"; 
     }
   
