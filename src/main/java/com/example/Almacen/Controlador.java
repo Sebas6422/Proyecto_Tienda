@@ -101,7 +101,7 @@ public class Controlador {
     }
 
     @GetMapping("/a_Dashboard")
-    public String dashboardA(HttpSession session) {
+    public String dashboardA(HttpSession session, Model model) {
         Usuario usuario = (Usuario) session.getAttribute("Usuario");
         if (usuario == null) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
