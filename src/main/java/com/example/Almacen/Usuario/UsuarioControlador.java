@@ -192,27 +192,12 @@ public class UsuarioControlador {
         }
     }
 
-    @GetMapping("/cerrarSesionU")
-    public String cerrarSesionU(HttpSession session) {
-        if (verificarTokenSesionU(session.getAttribute("correoUsuarioC").toString(),  session.getAttribute("tokenSesionC").toString())) {
-            // Eliminar el token de sesión asociado al usuario
-            sesionesActivasU.remove(session.getAttribute("correoUsuarioC").toString());
-            session.invalidate(); // Invalida la sesión
-            return "redirect:/";
-        } else {
-            return "redirect:/aProveedores";
-        }
-    }
+
 
     // Método para verificar si un token de sesión es válido
     public static boolean verificarTokenSesionA(String correoA, String tokenA) {
         String tokenGuardadoA = sesionesActivasA.get(correoA);
         return tokenGuardadoA != null && tokenGuardadoA.equals(tokenA);
-    }
-
-    public static boolean verificarTokenSesionU(String correoU, String tokenU) {
-        String tokenGuardadoU = sesionesActivasU.get(correoU);
-        return tokenGuardadoU != null && tokenGuardadoU.equals(tokenU);
     }
 
 
@@ -238,6 +223,8 @@ public class UsuarioControlador {
                                    @RequestParam("direccion") String us_direccion,
                                    @RequestParam("telefono") String us_telefono,
                                    Model model, HttpSession session) {
+        //boolean vDni, vNombre, vApellido, vCorreo, vClave, vDireccion, vTelefono;
+
         Usuario usuario = new Usuario();
 
         Hash hash = new Hash();
@@ -262,5 +249,78 @@ public class UsuarioControlador {
 
         return "redirect:/Login";
     }
+
+
+     
+    //USUARIO
+     
+    public static boolean correo(String correo){
+        if(correo==null || correo.isEmpty()){
+            return false;
+        }        
+       if(!correo.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$")){
+       return false;
+    }
+        
+       if (correo.matches("^[0-9]+@gmail\\.com")) {
+        return false; 
+    }
+    return true;
+}
+    
+    //CONTRASEÑA
+    public static boolean password(String contrasena) {
+        if (contrasena == null || contrasena.isEmpty()|| contrasena.length()<8 ) {
+            return false;
+        }
+        if (contrasena.contains(" ")) {
+        return false;
+    }      
+        boolean minus = contrasena.matches(".*[a-z].*");   
+        boolean mayus = contrasena.matches(".*[A-Z].*");     
+        boolean number = contrasena.matches(".*[0-9].*");
+        boolean especial = contrasena.matches(".*[!@#$%^&*(),.?\":{}|<>].*");
+        return minus && mayus && number && especial;
+    }
+    
+    //DNI
+    public static boolean dnid(String dni) {
+      
+        if (dni == null || dni.isEmpty()) {
+            return false;
+        }    
+        return dni.matches("^\\d{8}$");
+    }
+   //nombre
+    public static boolean nombre(String nombre) {
+    
+        if (nombre == null || nombre.isEmpty()) {
+            return false;
+        }
+        return nombre.matches("^[a-zA-Z\\s]+$");
+    }
+    //apellido
+     public static boolean apellido(String apellido) {
+        if (apellido == null || apellido.isEmpty()) {
+            return false;
+        }
+        return apellido.matches("^[a-zA-Z\\s]+$");
+    }
+     
+     //direccion
+     public static boolean direccion(String dir) {
+        if (dir == null || dir.isEmpty()) {
+            return false;
+        }
+        return dir.matches("^[A-Za-z0-9\\s.,-]+$");
+    }
+    //celular
+      public static boolean celular(String celular) {
+        if (celular == null || celular.isEmpty()) {
+            return false;
+        }    
+        return celular.matches("^9\\d{8}$");
+    }
+    
     
 }
