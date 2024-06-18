@@ -122,25 +122,38 @@ public class UsuarioControlador {
 
                     if (usuario.getRol().getRol_id() == 1) {
                         String tokenSesion = UUID.randomUUID().toString();
-                        sesionesActivasA.put(correo, tokenSesion);
-                        session.setAttribute("correoUsuario", correo);
+                        //guardamos la sesion del usuario con su objeto y tambien su token de sesion
+                        session.setAttribute("Usuario", usuarioLo);
                         session.setAttribute("tokenSesion", tokenSesion);
+                        sesionesActivasA.put(usuarioLo.getUs_correo(), tokenSesion);
+                        
                         session.setAttribute("sessionStartTime", System.currentTimeMillis());
                         // Reiniciar los intentos fallidos al ingresar exitosamente al login
-                        intentosFallidos.remove(correo);
+                        intentosFallidos.remove(usuarioLo.getUs_correo());
                         return "redirect:/AdminDashIn";
                     } else if (usuario.getRol().getRol_id() == 2) {
                         // Verifica al usuario
                         String tokenSesion = UUID.randomUUID().toString();
-                        sesionesActivasU.put(correo, tokenSesion);
-                        session.setAttribute("usuarioLo", usuarioLo);
-                        session.setAttribute("correoUsuarioC", correo);
-                        session.setAttribute("tokenSesionC", tokenSesion);
+                        //guardamos la sesion del usuario con su objeto y tambien su token de sesion
+                        session.setAttribute("Usuario", usuarioLo);
+                        session.setAttribute("tokenSesion", tokenSesion);
+                        sesionesActivasA.put(usuarioLo.getUs_correo(), tokenSesion);
+                        
+                        session.setAttribute("sessionStartTime", System.currentTimeMillis());
                         // Reiniciar los intentos fallidos al ingresar exitosamente al login
-                        intentosFallidos.remove(correo);
+                        intentosFallidos.remove(usuarioLo.getUs_correo());
                         return "redirect:/Cliente";
                     } else if (usuario.getRol().getRol_id() == 3) {
-                        return "vIndexVendedor";
+                        String tokenSesion = UUID.randomUUID().toString();
+                        //guardamos la sesion del usuario con su objeto y tambien su token de sesion
+                        session.setAttribute("Usuario", usuarioLo);
+                        session.setAttribute("tokenSesion", tokenSesion);
+                        sesionesActivasA.put(usuarioLo.getUs_correo(), tokenSesion);
+                        
+                        session.setAttribute("sessionStartTime", System.currentTimeMillis());
+                        // Reiniciar los intentos fallidos al ingresar exitosamente al login
+                        intentosFallidos.remove(usuarioLo.getUs_correo());
+                        return "redirect:/VendedorBienvenida";
                     }
                 }
             }
@@ -164,11 +177,14 @@ public class UsuarioControlador {
     }
 
 
-    @GetMapping("/cerrarSesionA")
-    public String cerrarSesionA(HttpSession session) {
-        if (verificarTokenSesionA(session.getAttribute("correoUsuario").toString(),  session.getAttribute("tokenSesion").toString())) {
+    @GetMapping("/cerrarSesion")
+    public String cerrarSesion(HttpSession session) {
+        Usuario usua  = (Usuario) session.getAttribute("Usuario");
+        String correoU = usua.getUs_correo();
+        String tokenU = session.getAttribute("tokenSesion").toString();
+        if (verificarTokenSesionA(correoU,  tokenU)) {
             // Eliminar el token de sesión asociado al usuario
-            sesionesActivasA.remove(session.getAttribute("correoUsuario").toString());
+            sesionesActivasA.remove(correoU);
             session.invalidate(); // Invalida la sesión
             return "redirect:/";
         } else {
@@ -199,6 +215,8 @@ public class UsuarioControlador {
         return tokenGuardadoU != null && tokenGuardadoU.equals(tokenU);
     }
 
+
+    //Validaciones
     private boolean correoCorrecto(String correo) {
         if (correo.length() > 40) {
             return false;
