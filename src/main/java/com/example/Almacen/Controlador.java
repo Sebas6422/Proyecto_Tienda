@@ -118,7 +118,7 @@ public class Controlador {
         if (!inicio) {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
-
+        model.addAttribute("usuario", usuario);
         return "aDashboard"; 
     }
 
@@ -143,6 +143,7 @@ public class Controlador {
 
         List<Usuario> usuarios = serviceU.Listar();
         model.addAttribute("clientes", usuarios);
+        model.addAttribute("usuario", usuario);
         return "aUsuarios";  
     }
 
@@ -167,6 +168,7 @@ public class Controlador {
 
         List<Producto> productos = serviceP.Listar();
         model.addAttribute("productos", productos); 
+        model.addAttribute("usuario", usuario);
         return "aProductos";
     }
 
@@ -194,6 +196,7 @@ public class Controlador {
         model.addAttribute("cat_productos", cat_productos);
         model.addAttribute("proveedores", proveedores);
         model.addAttribute("producto", new Producto()); // Assuming you have a Producto class
+        model.addAttribute("usuario", usuario);
         return "aProductos_registrar";
     }
 
@@ -218,11 +221,12 @@ public class Controlador {
 
         List<Proveedor> proveedores = service.Listar();
         model.addAttribute("proveedores", proveedores); 
+        model.addAttribute("usuario", usuario);
         return "aProveedores";  
     }
 
     @GetMapping("/AdminProvRegistro")
-    public String admin_prov_registro(HttpSession session) {
+    public String admin_prov_registro(HttpSession session, Model model) {
         Usuario usuario = (Usuario) session.getAttribute("Usuario");
         if (usuario == null) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
@@ -239,12 +243,12 @@ public class Controlador {
         if (!inicio) {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
-
+        model.addAttribute("usuario", usuario);
         return "aProveedor_registrar";
     }
 
     @GetMapping("/AdminVentas")
-    public String admin_ventas(HttpSession session) {
+    public String admin_ventas(HttpSession session, Model model) {
         Usuario usuario = (Usuario) session.getAttribute("Usuario");
         if (usuario == null) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
@@ -261,12 +265,12 @@ public class Controlador {
         if (!inicio) {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
-
+        model.addAttribute("usuario", usuario);
         return "aVentas";
     }
 
     @GetMapping("/AdminPedidos")
-    public String admin_pedidos(HttpSession session) {
+    public String admin_pedidos(HttpSession session, Model model) {
         Usuario usuario = (Usuario) session.getAttribute("Usuario");
         if (usuario == null) {
             return "redirect:/"; // Redirige al login si no hay usuario en sesión
@@ -283,7 +287,7 @@ public class Controlador {
         if (!inicio) {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
-
+        model.addAttribute("usuario", usuario);
         return "aPedidos";
     }
 
