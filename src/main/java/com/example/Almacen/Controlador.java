@@ -42,8 +42,27 @@ public class Controlador {
     }
 
     @GetMapping("/Login")
-    public String login() {
-        return "Login";
+    public String login(HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String retorno = "Login";
+        if (usuario == null) {
+            return retorno;
+        }else{
+            switch (usuario.getRol().getRol_id()) {
+                case 1:
+                    retorno = "redirect:/AdminDashIn";
+                    break;
+                case 2:
+                    retorno = "redirect:/Cliente";
+                    break;
+                case 3:
+                    retorno = "redirect:/VendedorBienvenida";
+                    break;    
+                default:
+                    break;
+            }
+            return retorno;
+        }
     }
 
     @GetMapping("/Cliente")
