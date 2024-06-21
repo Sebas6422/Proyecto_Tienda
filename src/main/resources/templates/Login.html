@@ -186,8 +186,9 @@
                                            placeholder="Ingrese su correo">
 
                                     <label for="exampleInputEmail1">Contraseña</label>
-                                    <input type="text" class="form-control my-2" name="contraseña" id="exampleInputEmail1" required
-                                           placeholder="Ingrese su contraseña">
+                                    <input type="password" class="form-control my-2" name="contraseña" id="registerPassword" required
+                                            placeholder="Ingrese su contraseña">
+
                                     
                                     <label for="exampleInputEmail1">Dirección</label>
                                     <input type="text" class="form-control my-2" name="direccion" id="exampleInputEmail1" required
@@ -197,8 +198,25 @@
                                     <input type="text" class="form-control my-2" name="telefono" id="exampleInputEmail1" required
                                            placeholder="Ingrese su telefono">
                                 </div>                               
-                             <input class="btn btn-dark mt-2" style="background-color: #fe9f48;" type="submit" value="Registrar">
+                            <button type="submit" id="submitButton" class="btn btn-dark mt-2" style="background-color: #fe9f48;">Registrar</button>
                             </form>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', (event) => {
+                                    // Obtener el botón de submit
+                                    var submitButton = document.getElementById('submitButton');
+                                    
+                                    // Añadir un listener para el evento click del botón de submit
+                                    submitButton.addEventListener('click', function(event) {
+                                        // Obtener el campo de contraseña
+                                        var contraseña = document.querySelector('input[name="contraseña"]');
+                                        
+                                        var hashedClave = sha256.create().update(contraseña.value).hex();
+
+                                        contraseña.value = hashedClave;
+                                    });
+                                });
+                            </script>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
                         </div>
                         <div class="modal-footer">
                             <button style="background-color: #fe9f48;" type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>

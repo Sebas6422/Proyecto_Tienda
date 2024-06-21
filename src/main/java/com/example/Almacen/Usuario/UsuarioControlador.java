@@ -227,8 +227,7 @@ public class UsuarioControlador {
 
         Usuario usuario = new Usuario();
 
-        Hash hash = new Hash();
-        us_clave = hash.StringToHash(us_clave, "SHA256");
+
         usuario.setUs_contrasenha(us_clave);            
 
         usuario.setUs_dni(us_dni);                            
