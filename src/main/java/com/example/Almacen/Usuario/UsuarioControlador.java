@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.Almacen.Encriptador.Hash;
+import com.example.Almacen.Proveedor.ProveedorControlador;
 import com.example.Almacen.Rol.IRol;
 import com.example.Almacen.Rol.Rol;
 
+import ch.qos.logback.classic.Logger;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,12 +70,20 @@ public class UsuarioControlador {
 
     @GetMapping("/ingresarLogin")
     public String mostrarLogin(HttpSession session, Model model) {
-        // Pasar el mensaje de error si existe
+        // Transferir los mensajes de sesión al modelo
         if (session.getAttribute("error") != null) {
             model.addAttribute("error", session.getAttribute("error"));
-            session.removeAttribute("error"); // Eliminar el mensaje de error después de mostrarlo
+            session.removeAttribute("error");
         }
-        return "Login";
+        if (session.getAttribute("success") != null) {
+            model.addAttribute("success", session.getAttribute("success"));
+            session.removeAttribute("success");
+        }
+        if (session.getAttribute("errorR") != null) {
+            model.addAttribute("errorR", session.getAttribute("errorR"));
+            session.removeAttribute("errorR");
+        }
+        return "login"; // Asegúrate de que este nombre coincida con tu vista de login
     }
 
 
@@ -193,13 +204,11 @@ public class UsuarioControlador {
     }
 
 
-
     // Método para verificar si un token de sesión es válido
     public static boolean verificarTokenSesionA(String correoA, String tokenA) {
         String tokenGuardadoA = sesionesActivasA.get(correoA);
         return tokenGuardadoA != null && tokenGuardadoA.equals(tokenA);
     }
-
 
     //Validaciones
     private boolean correoCorrecto(String correo) {
@@ -216,78 +225,71 @@ public class UsuarioControlador {
 
     @PostMapping("/registrarCliente")
     public String registrarCliente(@RequestParam("dni") String us_dni,
-                                   @RequestParam("nombre") String us_nombre,
-                                   @RequestParam("apellido") String us_apellido,
-                                   @RequestParam("correo") String us_correo,
-                                   @RequestParam("contraseña") String us_clave,
-                                   @RequestParam("direccion") String us_direccion,
-                                   @RequestParam("telefono") String us_telefono,
-                                   Model model, HttpSession session) {
-        //boolean vDni, vNombre, vApellido, vCorreo, vClave, vDireccion, vTelefono;
-
+                                @RequestParam("nombre") String us_nombre,
+                                @RequestParam("apellido") String us_apellido,
+                                @RequestParam("correo") String us_correo,
+                                @RequestParam("hashedPassword") String us_clave,
+                                @RequestParam("direccion") String us_direccion,
+                                @RequestParam("telefono") String us_telefono,
+                                Model model, HttpSession session) {
         Usuario usuario = new Usuario();
 
+        boolean dnidV = dnid(us_dni);
+        boolean correoV = correo(us_correo);
+        boolean nombreV = nombre(us_nombre);
+        boolean apellidoV = apellido(us_apellido);
+        boolean direccionV = direccion(us_direccion);
+        boolean celularV = celular(us_telefono);
 
-        usuario.setUs_contrasenha(us_clave);            
+        if(correoV && dnidV && nombreV && apellidoV && direccionV && celularV){
+            usuario.setUs_contrasenha(us_clave);            
+            usuario.setUs_dni(us_dni);                            
+            usuario.setUs_nombre(us_nombre);
+            usuario.setUs_apellido(us_apellido);
+            usuario.setUs_correo(us_correo);
+            usuario.setUs_direccion(us_direccion);
+            usuario.setUs_telefono(us_telefono);
+            
+            // Buscamos y asignamos el rol al Cliente
+            Rol rolCliente = iRol.findById(2)
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+            usuario.setRol(rolCliente);
 
-        usuario.setUs_dni(us_dni);                            
-        usuario.setUs_nombre(us_nombre);
-        usuario.setUs_apellido(us_apellido);
-        usuario.setUs_correo(us_correo);
-        usuario.setUs_direccion(us_direccion);
-        usuario.setUs_telefono(us_telefono);
-        
-        //Buscamos y asignamos el rol al Cliente
-        Rol rolCliente = iRol.findById(2)
-        .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
-        usuario.setRol(rolCliente);
-
-        service.Guardar(usuario);
-
-        session.setAttribute("success", "El cliente se registro con exito");
-
-        return "redirect:/Login";
+            service.Guardar(usuario);
+            session.setAttribute("success", "El cliente se registró con éxito.");
+        } else {
+            session.setAttribute("errorR", "Error al registrar cliente");
+        }
+        return "redirect:/usuario/ingresarLogin";
     }
 
 
-     
+     private static Logger logger = (Logger) LoggerFactory.getLogger(ProveedorControlador.class);
     //USUARIO
      
     public static boolean correo(String correo){
         if(correo==null || correo.isEmpty()){
             return false;
-        }        
-       if(!correo.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$")){
-       return false;
-    }
-        
-       if (correo.matches("^[0-9]+@gmail\\.com")) {
-        return false; 
-    }
-    return true;
-}
-    
-    //CONTRASEÑA
-    public static boolean password(String contrasena) {
-        if (contrasena == null || contrasena.isEmpty()|| contrasena.length()<8 ) {
+        }       
+
+        if(!correo.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$")){
             return false;
         }
-        if (contrasena.contains(" ")) {
-        return false;
-    }      
-        boolean minus = contrasena.matches(".*[a-z].*");   
-        boolean mayus = contrasena.matches(".*[A-Z].*");     
-        boolean number = contrasena.matches(".*[0-9].*");
-        boolean especial = contrasena.matches(".*[!@#$%^&*(),.?\":{}|<>].*");
-        return minus && mayus && number && especial;
+            
+        if (correo.matches("^[0-9]+@gmail\\.com")) {
+            return false; 
+        }
+        logger.info("Correo Verdadero");
+        return true;
     }
-    
+
     //DNI
     public static boolean dnid(String dni) {
       
         if (dni == null || dni.isEmpty()) {
             return false;
         }    
+        logger.info("dni Verdadero");
         return dni.matches("^\\d{8}$");
     }
    //nombre
@@ -296,6 +298,7 @@ public class UsuarioControlador {
         if (nombre == null || nombre.isEmpty()) {
             return false;
         }
+        logger.info("nombre");
         return nombre.matches("^[a-zA-Z\\s]+$");
     }
     //apellido
@@ -303,6 +306,7 @@ public class UsuarioControlador {
         if (apellido == null || apellido.isEmpty()) {
             return false;
         }
+        logger.info("apellido");
         return apellido.matches("^[a-zA-Z\\s]+$");
     }
      
@@ -311,6 +315,7 @@ public class UsuarioControlador {
         if (dir == null || dir.isEmpty()) {
             return false;
         }
+        logger.info("direccion");
         return dir.matches("^[A-Za-z0-9\\s.,-]+$");
     }
     //celular
@@ -318,6 +323,7 @@ public class UsuarioControlador {
         if (celular == null || celular.isEmpty()) {
             return false;
         }    
+        logger.info("celular");
         return celular.matches("^9\\d{8}$");
     }
     

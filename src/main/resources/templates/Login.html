@@ -115,6 +115,8 @@
                                             <a href="" class="btn btn-outline-secondary form-control mt-3" data-toggle="modal"
                                                data-target="#exampleModalCenter" style="width: 45%;">Registrarse</a>
                                             <div th:if="${error}" th:text="${error}" style="color: red;"></div>
+                                            <!-- Mensajes de éxito y error -->
+                                            <div th:if="${errorR}" th:text="${errorR}" style="color: red;"></div>
                                             <div th:if="${success}" th:text="${success}" style="color: green;"></div>
                                         </form>
                                         <script th:src="@{/js/captcha.js}"></script>
@@ -163,60 +165,58 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="/usuario/registrarCliente" method="post" enctype="multipart/form-data">
-                                 <input type="hidden" name="opcion" value="agregar2">
-                                 <input type="hidden" name="grupo" value="usuarios">
-                                 <input type="hidden" name="us_roles" value="1">
+                            <form id="loginForm" action="/usuario/registrarCliente" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="opcion" value="agregar2">
+                                <input type="hidden" name="grupo" value="usuarios">
+                                <input type="hidden" name="us_roles" value="1">
                                 <div class="form-group col-lg-6">
-                                    
-                                    <label for="exampleInputEmail1">DNI</label>
-                                    <input type="text" class="form-control my-2" name="dni" id="exampleInputEmail1" required
-                                           placeholder="Ingrese su usuario">
-
-                                    <label for="exampleInputEmail1">Nombres</label>
-                                    <input type="text" class="form-control my-2" name="nombre" id="exampleInputEmail1" required
-                                           placeholder="Ingrese su nombre">
-
-                                    <label for="exampleInputEmail1">Apellidos</label>
-                                    <input type="text" class="form-control my-2" name="apellido" id="exampleInputEmail1" required
-                                           placeholder="Ingrese su apellido">
-
-                                    <label for="exampleInputEmail1">Correo</label>
-                                    <input type="text" class="form-control my-2" name="correo" id="exampleInputEmail1" required
-                                           placeholder="Ingrese su correo">
-
-                                    <label for="exampleInputEmail1">Contraseña</label>
-                                    <input type="password" class="form-control my-2" name="contraseña" id="registerPassword" required
-                                            placeholder="Ingrese su contraseña">
-
-                                    
-                                    <label for="exampleInputEmail1">Dirección</label>
-                                    <input type="text" class="form-control my-2" name="direccion" id="exampleInputEmail1" required
-                                           placeholder="Ingrese su contraseña">
-
-                                    <label for="exampleInputEmail1">Telefono</label>
-                                    <input type="text" class="form-control my-2" name="telefono" id="exampleInputEmail1" required
-                                           placeholder="Ingrese su telefono">
-                                </div>                               
-                            <button type="submit" id="submitButton" class="btn btn-dark mt-2" style="background-color: #fe9f48;">Registrar</button>
+                                    <label for="dni">DNI</label>
+                                    <input type="text" class="form-control my-2" name="dni" id="dni" required placeholder="Ingrese su usuario">
+                            
+                                    <label for="nombre">Nombres</label>
+                                    <input type="text" class="form-control my-2" name="nombre" id="nombre" required placeholder="Ingrese su nombre">
+                            
+                                    <label for="apellido">Apellidos</label>
+                                    <input type="text" class="form-control my-2" name="apellido" id="apellido" required placeholder="Ingrese su apellido">
+                            
+                                    <label for="correo">Correo</label>
+                                    <input type="email" class="form-control my-2" name="correo" id="correo" required placeholder="Ingrese su correo">
+                            
+                                    <label for="registerPassword">Contraseña</label>
+                                    <input type="password" class="form-control my-2" name="contraseña" id="registerPassword" required placeholder="Ingrese su contraseña">
+                            
+                                    <label for="direccion">Dirección</label>
+                                    <input type="text" class="form-control my-2" name="direccion" id="direccion" required placeholder="Ingrese su dirección">
+                            
+                                    <label for="telefono">Telefono</label>
+                                    <input type="text" class="form-control my-2" name="telefono" id="telefono" required placeholder="Ingrese su teléfono">
+                            
+                                    <!-- Campo oculto para la contraseña hasheada -->
+                                    <input type="hidden" name="hashedPassword" id="hashedPassword">
+                                </div>
+                                <button type="submit" id="submitButton" class="btn btn-dark mt-2" style="background-color: #fe9f48;">Registrar</button>
                             </form>
+                            
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
                             <script>
-                                document.addEventListener('DOMContentLoaded', (event) => {
-                                    // Obtener el botón de submit
-                                    var submitButton = document.getElementById('submitButton');
-                                    
-                                    // Añadir un listener para el evento click del botón de submit
-                                    submitButton.addEventListener('click', function(event) {
-                                        // Obtener el campo de contraseña
-                                        var contraseña = document.querySelector('input[name="contraseña"]');
-                                        
-                                        var hashedClave = sha256.create().update(contraseña.value).hex();
-
-                                        contraseña.value = hashedClave;
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const loginForm = document.getElementById('loginForm');
+                                    const registerPassword = document.getElementById('registerPassword');
+                                    const hashedPassword = document.getElementById('hashedPassword');
+                            
+                                    loginForm.addEventListener('submit', function (event) {
+                                        event.preventDefault(); // Evita el envío del formulario
+                            
+                                        // Hashear la contraseña y colocarla en el campo oculto
+                                        const hashedClave = sha256(registerPassword.value);
+                                        hashedPassword.value = hashedClave;
+                            
+                            
+                                        // Enviar el formulario
+                                        loginForm.submit();
                                     });
                                 });
                             </script>
-                            <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
                         </div>
                         <div class="modal-footer">
                             <button style="background-color: #fe9f48;" type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
