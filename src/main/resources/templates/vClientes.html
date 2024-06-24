@@ -97,8 +97,8 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr th:each="cliente : ${clientes}">
-                                                        <td th:text="${cliente.us_id}"></td>
+                                                    <tr th:each="cliente, stat : ${clientes}">
+                                                        <td th:text="${stat.count}"></td>
                                                         <td th:text="${cliente.us_dni}"></td>
                                                         <td th:text="${cliente.us_nombre}"></td>
                                                         <td th:text="${cliente.us_apellido}"></td>
