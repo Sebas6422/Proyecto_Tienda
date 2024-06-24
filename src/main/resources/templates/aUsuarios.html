@@ -124,7 +124,7 @@
                                                 <tbody>
                                                     <tr th:each="cliente : ${clientes}">
                                                         <td th:text="${cliente.us_id}"></td>
-                                                        <td>numerorol</td>
+                                                        <td th:text="${cliente.rol.rol_nombre}"></td>
                                                         <td th:text="${cliente.us_dni}"></td>
                                                         <td th:text="${cliente.us_nombre}"></td>
                                                         <td th:text="${cliente.us_apellido}"></td>                                                      

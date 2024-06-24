@@ -1,5 +1,6 @@
 package com.example.Almacen;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -352,6 +353,14 @@ public class Controlador {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
 
+        List<Usuario> usuarios = serviceU.Listar();
+        List<Usuario> usuariosC = new ArrayList<>();
+        for (Usuario usu : usuarios) {
+            if (usu.getRol().getRol_id() == 2) {
+                usuariosC.add(usu);
+            }
+        }
+        model.addAttribute("clientes", usuariosC);
         model.addAttribute("usuario", usuario);
         return "vClientes"; 
     }
