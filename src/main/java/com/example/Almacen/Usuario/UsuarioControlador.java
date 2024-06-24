@@ -60,14 +60,6 @@ public class UsuarioControlador {
         return sesionesActivasA.containsKey(correoUsuario);
     }
 
-    public Map<String, String> getSesionesU() {
-        return sesionesActivasU;
-    }
-
-    public static boolean sesionActivaU(String correoUsuario) {
-        return sesionesActivasU.containsKey(correoUsuario);
-    }
-
     @GetMapping("/ingresarLogin")
     public String mostrarLogin(HttpSession session, Model model) {
         // Transferir los mensajes de sesión al modelo
@@ -126,7 +118,7 @@ public class UsuarioControlador {
                 userFound = true;
                 if (usuario.getUs_contrasenha().equals(contra)) {
                     Usuario usuarioLo = usuario;
-                    if (sesionActivaA(correo) || sesionActivaU(correo)) {
+                    if (sesionActivaA(correo)) {
                         session.setAttribute("error", "Esta cuenta ya está logueada.");
                         return "redirect:/usuario/ingresarLogin";
                     }
@@ -264,7 +256,7 @@ public class UsuarioControlador {
     }
 
 
-     private static Logger logger = (Logger) LoggerFactory.getLogger(ProveedorControlador.class);
+    private static Logger logger = (Logger) LoggerFactory.getLogger(ProveedorControlador.class);
     //USUARIO
      
     public static boolean correo(String correo){
