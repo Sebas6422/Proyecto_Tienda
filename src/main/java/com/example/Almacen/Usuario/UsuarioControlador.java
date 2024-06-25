@@ -60,7 +60,7 @@ public class UsuarioControlador {
         return sesionesActivasA.containsKey(correoUsuario);
     }
 
-    @GetMapping("/ingresarLogin")
+    @GetMapping("/ingresarLogin1")
     public String mostrarLogin(HttpSession session, Model model) {
         // Transferir los mensajes de sesión al modelo
         if (session.getAttribute("error") != null) {
@@ -99,7 +99,7 @@ public class UsuarioControlador {
             long tiempoRestante = (System.currentTimeMillis() - tiempoBloqueo.get(correo)) / 1000;
             if (tiempoRestante < BLOQUEO_TIEMPO_MS / 1000) {
                 session.setAttribute("error", "Cuenta bloqueada. Inténtelo de nuevo en " + (BLOQUEO_TIEMPO_MS / 1000 - tiempoRestante) + " segundos.");
-                return "redirect:/usuario/ingresarLogin";
+                return "redirect:/usuario/ingresarLogin1";
             } else {
                 // El periodo de bloqueo ha expirado
                 tiempoBloqueo.remove(correo);
@@ -120,7 +120,7 @@ public class UsuarioControlador {
                     Usuario usuarioLo = usuario;
                     if (sesionActivaA(correo)) {
                         session.setAttribute("error", "Esta cuenta ya está logueada.");
-                        return "redirect:/usuario/ingresarLogin";
+                        return "redirect:/usuario/ingresarLogin1";
                     }
 
                     if (usuario.getRol().getRol_id() == 1) {
@@ -165,7 +165,7 @@ public class UsuarioControlador {
         if (!userFound) {
             // No se encontró el usuario
             session.setAttribute("error", "Correo o contraseña incorrecta");
-            return "redirect:/usuario/ingresarLogin";
+            return "redirect:/usuario/ingresarLogin1";
         }
 
         // Manejar intentos fallidos
@@ -176,7 +176,7 @@ public class UsuarioControlador {
         } else {
             session.setAttribute("error", "Correo o contraseña incorrectos. Intento " + intentosFallidos.get(correo) + " de " + MAX_INTENTOS + ".");
         }
-        return "redirect:/usuario/ingresarLogin";
+        return "redirect:/usuario/ingresarLogin1";
     }
 
 
