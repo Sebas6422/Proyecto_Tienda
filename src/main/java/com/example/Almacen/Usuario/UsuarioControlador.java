@@ -75,7 +75,7 @@ public class UsuarioControlador {
             model.addAttribute("errorR", session.getAttribute("errorR"));
             session.removeAttribute("errorR");
         }
-        return "login"; // Asegúrate de que este nombre coincida con tu vista de login
+        return "Login"; // Asegúrate de que este nombre coincida con tu vista de login
     }
 
 
