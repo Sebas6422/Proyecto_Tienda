@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.example.Almacen.Carrito.Carrito;
+import com.example.Almacen.Carrito.ICarritoService;
 import com.example.Almacen.Categoria_Producto.Categoria_Producto;
 import com.example.Almacen.Categoria_Producto.ICategoria_ProductoService;
 import com.example.Almacen.Producto.IProductoService;
@@ -31,6 +33,8 @@ public class Controlador {
     private ICategoria_ProductoService serviceC;
     @Autowired
     private IUsuarioService serviceU;
+    @Autowired
+    private ICarritoService serviceCa;
 
     @GetMapping("/")
     public String inicio() {
@@ -64,6 +68,27 @@ public class Controlador {
             }
             return retorno;
         }
+    }
+
+    @GetMapping("/CarritoP")
+    public String carrito_principal(HttpSession session, Model model){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        String volver = "Login";
+        if(usuario != null){
+            if (usuario.getRol().getRol_id() != 1 && usuario.getRol().getRol_id() != 3) {
+                // para mostrar el carrito del cliente actual
+                List<Carrito> carritos = serviceCa.Listar();
+                List<Carrito> carritoC = new ArrayList<>();
+                for (Carrito carr : carritos) {
+                    if (carr.getUsu().getUs_id() == usuario.getUs_id() && carr.getEstado().getEstado_id() == 1) {
+                        carritoC.add(carr);
+                    }
+                }
+                model.addAttribute("carritosC", carritoC);
+                volver = "uCarritoCliente";
+            } 
+        }
+        return volver;
     }
 
     @GetMapping("/Cliente")

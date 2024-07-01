@@ -69,6 +69,7 @@ public class ProductoControlador {
     @Autowired
     private IEstado est;
 
+    private Usuario usuario = new Usuario();
     @GetMapping("/productos/")
     public String Mostrar(Model model) {
         List<Producto> productos = service.Listar();
@@ -94,6 +95,24 @@ public class ProductoControlador {
         }
     }
 
+
+    @GetMapping("registrarProducto")
+    public String mostrarProducto(HttpSession session, Model model){
+        if (session.getAttribute("error") != null) {
+            model.addAttribute("error", session.getAttribute("error"));
+            session.removeAttribute("error");
+        }
+        if (session.getAttribute("success") != null) {
+            model.addAttribute("success", session.getAttribute("success"));
+            session.removeAttribute("success");
+        }
+        usuario = (Usuario) session.getAttribute("Usuario");
+        List<Producto> productos = service.Listar();
+        model.addAttribute("productos", productos);
+        model.addAttribute("usuario", usuario);
+        return "aProductos";
+    }
+
     @PostMapping("/registrarProducto")
     public String registrarProducto(@RequestParam("produc_nombre") String nombre,
                                     @RequestParam("produc_tamanho") String tamanho,
@@ -103,7 +122,7 @@ public class ProductoControlador {
                                     @RequestParam("produc_img") MultipartFile img,
                                     @RequestParam("categoria_producto") Integer cat_producto,
                                     @RequestParam("proveedor_id") Integer proveedor_id,
-                                    Model model) {
+                                    Model model, HttpSession session) {
         Producto pro = new Producto();
 
         if (!img.isEmpty()) {
@@ -113,6 +132,8 @@ public class ProductoControlador {
                 pro.setProduc_img(imgBlob);
             } catch (Exception e) {
                 e.printStackTrace();
+                session.setAttribute("error", "Error al cargar la imagen");
+                return "redirect:/proveedor/registraProducto";
             }
         }
 
@@ -133,7 +154,8 @@ public class ProductoControlador {
         pro.setProveedor(proveedor);
 
         service.Guardar(pro);
-        return "redirect:/producto/productos/";
+        session.setAttribute("success", "El producto se registró con éxito.");
+        return "redirect:/producto/registrarProducto";
     }
 
     @GetMapping("/eliminarProducto")
@@ -225,58 +247,77 @@ public class ProductoControlador {
 
     @PostMapping("/AñadirCarrito")
     public String agregarCarrito(@RequestParam("produc_id") int idP,
-                                      @RequestParam("cantidad") int cant,
-                                      HttpSession session,
-                                      Model model){
+                                @RequestParam("cantidad") int cant,
+                                HttpSession session,
+                                Model model) {
         Optional<Producto> produOptional = service.ConsultarId(idP);
         Carrito carrito = new Carrito();
         Double subtotal = 0.0;
 
-        if(produOptional.isPresent()){
+        if (produOptional.isPresent()) {
             Producto producto = produOptional.get();
             subtotal = cant * producto.getProduc_precio();
 
             carrito.setCarr_subtotal(subtotal);
-            Usuario usua = (Usuario) session.getAttribute("usuarioLo");
+            Usuario usua = (Usuario) session.getAttribute("Usuario");
             int idU = usua.getUs_id();
             Usuario usuario = usu.findById(idU)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-            
+
             carrito.setUsu(usuario);
 
             Producto produc = iProducto.findById(idP)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-            
+
             carrito.setProducto(produc);
 
             Estado estado = est.findById(1)
                 .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
-            
+
             carrito.setEstado(estado);
             carrito.setCantidad(cant);
 
             serviceC.Guardar(carrito);
 
-            //para mostrar el carrito del cliente actual
+            // para mostrar el carrito del cliente actual
             List<Carrito> carritos = serviceC.Listar();
             List<Carrito> carritoC = new ArrayList<>();
-            for (Carrito carr : carritos){
-                if (carr.getUsu() == usuario) {
+            for (Carrito carr : carritos) {
+                if (carr.getUsu().getUs_id() == usuario.getUs_id() && carr.getEstado().getEstado_id() == 1) {
                     carritoC.add(carr);
                 }
             }
             model.addAttribute("carritosC", carritoC);
-            return "/uCarritoCliente";
-        }else{
+            return "uCarritoCliente";
+        } else {
             return "error";
         }
     }
+
 
     @PostMapping("/ComprarProducto")
     public String comprarProductos(@RequestParam("id_usu") int id){
         return "redirect:/Cliente";
     }
 
+    @GetMapping("/eliminarProductoCarrito")
+    public String cancelarProducto(@RequestParam("id_carrito") int id,
+                                   Model model, HttpSession session){
+        Optional<Carrito> carrN = serviceC.ConsultarId(id);   
+        Carrito carrActualizado = new Carrito();
+        carrActualizado.setCarr_id(carrN.get().getCarr_id());
+        carrActualizado.setCantidad(carrN.get().getCantidad());
+        carrActualizado.setCarr_subtotal(carrN.get().getCarr_subtotal());
+
+        Estado estado = est.findById(2)
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));    
+        carrActualizado.setEstado(estado);
+        
+        carrActualizado.setProducto(carrN.get().getProducto());
+        carrActualizado.setUsu(carrN.get().getUsu());
+        serviceC.Guardar(carrActualizado);
+        return "redirect:/CarritoP";
+    } 
 
     //Validacion de compra
     public static boolean prodcantidad(String cantidad) {

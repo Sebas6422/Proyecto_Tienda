@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Almacen.Usuario.Usuario;
+
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -36,14 +39,17 @@ public class ProveedorControlador {
     @Autowired
     private IProveedorService service;
     //private static Logger logger = (Logger) LoggerFactory.getLogger(ProveedorControlador.class);
+    Usuario usuario = new Usuario();
 
     @Autowired
     private IProveedor iProveedor;
 
     @GetMapping("/proveedores")
-    public String Mostrar(Model model) {
+    public String Mostrar(Model model, HttpSession session) {
+        usuario = (Usuario) session.getAttribute("Usuario");
         List<Proveedor> proveedores = service.Listar();
         model.addAttribute("proveedores", proveedores); 
+        model.addAttribute("usuario", usuario);
         return "aProveedores";
     }
 
@@ -65,6 +71,23 @@ public class ProveedorControlador {
         }
     }
 
+    @GetMapping("/registrarProveedor")
+    public String mostrarProveedores(HttpSession session, Model model){
+        if (session.getAttribute("error") != null) {
+            model.addAttribute("error", session.getAttribute("error"));
+            session.removeAttribute("error");
+        }
+        if (session.getAttribute("success") != null) {
+            model.addAttribute("success", session.getAttribute("success"));
+            session.removeAttribute("success");
+        }
+        usuario = (Usuario) session.getAttribute("Usuario");
+        List<Proveedor> proveedores = service.Listar();
+        model.addAttribute("proveedores", proveedores); 
+        model.addAttribute("usuario", usuario);
+        return "aProveedores";
+    }
+
     @PostMapping("/registrarProveedor")
     public String registrarProveedor(@RequestParam("prov_codigo") String codigo,
                                      @RequestParam("prov_nombre") String nombre,
@@ -75,31 +98,31 @@ public class ProveedorControlador {
                                      @RequestParam("prov_ciudad") String ciudad,
                                      @RequestParam("prov_estado") String estado,
                                      @RequestParam("prov_img") MultipartFile img,
-                                     Model model) {
+                                     Model model, HttpSession session) {
         Proveedor prov = new Proveedor();
     
 
         //Validación
-        boolean vacios = vacio(codigo, nombre, marca, celular, telefono, direccion, ciudad, estado, img.toString());
+        // boolean vacios = vacio(codigo, nombre, marca, celular, telefono, direccion, ciudad, estado, img.toString());
          
         
-        if(vacios){
-            return Mostrar(model);
-        }
+        // if(vacios){
+        //     return Mostrar(model, session);
+        // }
         
-        boolean codg = validarCodigo(codigo);
-        boolean nombg = validarNombre(nombre);
-        boolean marcag = validarMarca(marca);
-        boolean telCg = validarTelefonoC(celular);
-        boolean telg = validarTelefono(telefono);
-        boolean dircg = validarDireccion(direccion);
-        boolean ciudadg = validarCiudad(ciudad);
-        boolean estag = validarEstado(estado);
+        // boolean codg = validarCodigo(codigo);
+        // boolean nombg = validarNombre(nombre);
+        // boolean marcag = validarMarca(marca);
+        // boolean telCg = validarTelefonoC(celular);
+        // boolean telg = validarTelefono(telefono);
+        // boolean dircg = validarDireccion(direccion);
+        // boolean ciudadg = validarCiudad(ciudad);
+        // boolean estag = validarEstado(estado);
         
-        if (!codg || !nombg || !marcag || !telCg
-        || !telg || !dircg || !ciudadg || !estag) {
-            return Mostrar(model); 
-        }
+        // if (!codg || !nombg || !marcag || !telCg
+        // || !telg || !dircg || !ciudadg || !estag) {
+        //     return Mostrar(model, session); 
+        // }
         
         if(!img.isEmpty()){
             try{
@@ -108,6 +131,8 @@ public class ProveedorControlador {
                 prov.setProv_img(imgBlob);
             }catch(IOException | SQLException e){
                 e.printStackTrace();
+                session.setAttribute("error", "Error al cargar la imagen");
+                return "redirect:/proveedor/registraProveedor";
             }
         }
 
@@ -122,17 +147,18 @@ public class ProveedorControlador {
        
 
         service.Guardar(prov);
+        session.setAttribute("success", "El proveedor se registró con éxito.");
 
-        return "redirect:/proveedor/proveedores";
+        return "redirect:/proveedor/registraProveedor";
     }
 
 
     @GetMapping("/eliminarProveedor")
     public String eliminarProveedor(@RequestParam("id") int id,
-                                    Model model) {                            
+                                    Model model, HttpSession session) {                            
         service.Eliminar(id);
 
-        return Mostrar(model);
+        return Mostrar(model, session);
     }
     
 
@@ -164,7 +190,7 @@ public class ProveedorControlador {
                                     @RequestParam("prov_estado") String estado,
                                     @RequestParam("prov_img") MultipartFile img,
                                     @RequestParam("imagenExistenteP") int imagenExistente,
-                                    Model model) {
+                                    Model model, HttpSession session) {
         Proveedor proveedor = new Proveedor();
 
         if (!img.isEmpty()) {
@@ -194,7 +220,8 @@ public class ProveedorControlador {
 
         service.Guardar(proveedor);
 
-        return Mostrar(model);
+        session.setAttribute("success", "El proveedor se editó con éxito.");
+        return Mostrar(model, session);
     }
 
     

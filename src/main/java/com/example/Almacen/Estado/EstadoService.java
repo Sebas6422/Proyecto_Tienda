@@ -1,0 +1,40 @@
+package com.example.Almacen.Estado;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class EstadoService implements IEstadoService{
+
+    @Autowired
+    private IEstado data;
+
+    @Override
+    public List<Estado> Listar() {
+        return (List<Estado>) data.findAll();
+    }
+
+    @Override
+    public Optional<Estado> ConsultarId(int id) {
+        return data.findById(id);
+    }
+
+    @Override
+    public void Guardar(Estado estado) {
+        data.save(estado);
+    }
+
+    @Override
+    public void Eliminar(int id) {
+        data.deleteById(id);
+    }
+
+    @Override
+    public List<Estado> BuscarAll(String desc) {
+        return data.buscarPorTodo(desc);
+    }
+    
+}

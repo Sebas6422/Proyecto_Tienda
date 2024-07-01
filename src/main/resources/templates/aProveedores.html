@@ -121,7 +121,8 @@
                                                 <a th:href="@{AdminProvRegistro}" class="btn btn-dark ml-auto">Registrar</a>
                                             </div>
                                         </div>
-
+                                        <div th:if="${error}" th:text="${error}" style="color: red;"></div>
+                                        <div th:if="${success}" th:text="${success}" style="color: green;"></div>
                                         <div class="card-body table-responsive">
                                             <table class="table table-striped table-hover">
                                                 <thead>
