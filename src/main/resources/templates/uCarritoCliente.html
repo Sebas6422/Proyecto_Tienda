@@ -103,44 +103,36 @@
             <div class="col-sm-12" > 
                 <table class="table table-hover" style="color: black; background-color: white;">
                     <thead>
-                        <tr >
+                        <tr>
                             <th>Producto ID</th>
                             <th>PRODUCTO IMG</th>
-
                             <th>Nombre</th>
                             <th>Marca</th>
                             <th>Cantidad</th>
                             <th>Precio</th>
                             <th>Total</th>
-                            <th>Accion</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
-
-                    <body>
-
-                    <tr th:each="carrito, status : ${carritosC}">
-
-                        <td style="padding-top: 40px;" th:text="${status.index + 1}"></td>
-                        <td>
-                            <img th:src="@{/producto/getImage/{id}(id=${carrito.producto.produc_id})}" alt="imagenProducto" class="imagen-pequena">
-                        </td>
-
-                        <td style="padding-top: 40px;" th:text="${carrito.producto.produc_nombre}"></td>
-                        <td style="padding-top: 40px;" th:text="${carrito.producto.proveedor.prov_marca}"></td>
-                        <td style="padding-top: 40px;" th:text="${carrito.cantidad}"></td>
-                        <td style="padding-top: 40px;" th:text="${carrito.producto.produc_precio}"></td>
-                         <td style="padding-top: 40px;" th:text="${carrito.carr_subtotal}"></td>
-                         <td style="padding-top: 40px;" th:text="${carrito.estado.estado_info}"></td>
-                        <td style="padding-top: 40px;">
-                            <form action="/producto/ComprarProducto" method="post">
-                                <input type="hidden" name="id_usu" th:field="${carrito.usuario.us_id}">
-                                <button type="submit" class="btn btn-dark">Eliminar</button>                     
-                            </form>
-                        </td>
-                    </tr>
-
-                    </body>
+                    <tbody>
+                        <tr th:each="carrito, status : ${carritosC}">
+                            <td style="padding-top: 40px;" th:text="${status.index + 1}"></td>
+                            <td>
+                                <img th:src="@{/producto/getImage/{id}(id=${carrito.producto.produc_id})}" alt="imagenProducto" class="imagen-pequena">
+                            </td>
+                            <td style="padding-top: 40px;" th:text="${carrito.producto.produc_nombre}"></td>
+                            <td style="padding-top: 40px;" th:text="${carrito.producto.proveedor.prov_marca}"></td>
+                            <td style="padding-top: 40px;" th:text="${carrito.cantidad}"></td>
+                            <td style="padding-top: 40px;" th:text="${carrito.producto.produc_precio}"></td>
+                            <td style="padding-top: 40px;" th:text="${carrito.carr_subtotal}"></td>
+                            <td style="padding-top: 40px;" th:text="${carrito.estado.estado_info}"></td>
+                            <td style="padding-top: 40px;">
+                                <a th:href="@{/producto/eliminarProductoCarrito(id_carrito=${carrito.carr_id})}" class="btn btn-dark">Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
+                
 
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
