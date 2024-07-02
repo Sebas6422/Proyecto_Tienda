@@ -294,12 +294,6 @@ public class ProductoControlador {
         }
     }
 
-
-    @PostMapping("/ComprarProducto")
-    public String comprarProductos(@RequestParam("id_usu") int id){
-        return "redirect:/Cliente";
-    }
-
     @GetMapping("/eliminarProductoCarrito")
     public String cancelarProducto(@RequestParam("id_carrito") int id,
                                    Model model, HttpSession session){
