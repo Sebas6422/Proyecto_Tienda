@@ -1,5 +1,6 @@
 package com.example.Almacen.Pedido;
 
+import com.example.Almacen.Estado.Estado;
 import com.example.Almacen.Usuario.Usuario;
 
 import jakarta.persistence.Entity;
@@ -18,13 +19,15 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int pedido_id;
-    private String pedido_codigo;
     private String pedido_tipo;
     private String pedido_fecha;
-    private String pedido_estado;
     private double pedido_subtotal;
 
     @ManyToOne
     @JoinColumn(name = "Usuario_us_id", referencedColumnName = "us_id")
     private Usuario usu;
+
+    @ManyToOne
+    @JoinColumn(name = "Estado_estado_id", referencedColumnName = "estado_id")
+    private Estado estado;
 }

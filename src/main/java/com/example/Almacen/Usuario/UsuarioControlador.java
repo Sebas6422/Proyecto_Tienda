@@ -81,7 +81,7 @@ public class UsuarioControlador {
 
     @PostMapping("/ingresarLogin")
     public String verificarLogin(@RequestParam(value = "us_correo", required = false) String correo,
-                                 @RequestParam(value = "us_contrasenha", required = false) String contra,
+                                 @RequestParam(value = "hashedPasswordL", required = false) String contra,
                                  Model model, HttpSession session) {
 
         if (correo == null || correo.isEmpty() || contra == null || contra.isEmpty()) {
@@ -108,8 +108,6 @@ public class UsuarioControlador {
         }
 
         List<Usuario> usuarios = service.Listar();
-        Hash hash = new Hash();
-        contra = hash.StringToHash(contra, "SHA256");
 
         boolean userFound = false;
 
