@@ -134,8 +134,8 @@ public class CarritoControlador {
     
     @PostMapping("/Comprar")
     public String comprarTC(@RequestParam("metodo_pago") String metodo,
-                                    @RequestParam("tipo_pago") String tipo,
-                                    Model model, HttpSession session){
+                            @RequestParam("tipo_pago") String tipo,
+                            Model model, HttpSession session){
         Usuario usua = (Usuario) session.getAttribute("Usuario");
         final int estadoId;
         LocalDate fechaActual = LocalDate.now();
@@ -203,9 +203,34 @@ public class CarritoControlador {
             serviceD.Guardar(detalle);
         });
 
-        return "redirect:/Cliente";
+        if(usua.getRol().getRol_id() == 1)
+            return "redirect:/AdminPedidos";
+        else if (usua.getRol().getRol_id() == 2) 
+            return "redirect:/Cliente";
+        else if (usua.getRol().getRol_id() == 3) {
+            return "/";
+        }
+
+        return "/";
     }
 
+
+    @GetMapping("/ConfirmarCompra")
+    public String confirmarCompraAdmin(@RequestParam("id_pedido") int id, Model model, HttpSession session){
+        Optional<Pedido> pedOptional = servicePe.ConsultarId(id);
+
+        if(pedOptional.isPresent()){
+            Pedido pedido = pedOptional.get();
+
+            Estado estado = iEstado.findById(3)
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+            pedido.setEstado(estado);
+
+            servicePe.Guardar(pedido);
+        }
+        return "redirect:/AdminPedidos";
+    }
+    
     @GetMapping("/CancelarContraentrega")
     public String cancelarContraentrega(@RequestParam("id_pedido") int id, Model model){
 
