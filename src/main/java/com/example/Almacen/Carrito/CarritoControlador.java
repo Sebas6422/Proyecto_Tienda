@@ -48,6 +48,7 @@ public class CarritoControlador {
     @Autowired
     IDetalleService serviceD;
 
+
     @Autowired
     private IUsuario usu;
 
@@ -131,11 +132,12 @@ public class CarritoControlador {
     } 
 
     
-    @PostMapping("/ComprarConTarjeta")
-    public String comprarContarjeta(@RequestParam("metodo_pago") String metodo,
-                                    @RequestParam("tipo_tarjeta") String tipo,
+    @PostMapping("/Comprar")
+    public String comprarTC(@RequestParam("metodo_pago") String metodo,
+                                    @RequestParam("tipo_pago") String tipo,
                                     Model model, HttpSession session){
         Usuario usua = (Usuario) session.getAttribute("Usuario");
+        final int estadoId;
         LocalDate fechaActual = LocalDate.now();
         Pedido pedido = new Pedido();
         List<Carrito> carrito = service.Listar();
@@ -154,12 +156,23 @@ public class CarritoControlador {
                                     .sum();
         pedido.setPedido_total(total);
 
-        pedido.setUsu(usua);            
-
-        Estado estado = iEstado.findById(3)
+        pedido.setUsu(usua);      
+        
+        if(metodo.equals("Contraentrega")){
+            Estado estado = iEstado.findById(4)
                 .orElseThrow(() -> new RuntimeException("Estado no encontrado"));   
             
-        pedido.setEstado(estado);    
+            pedido.setEstado(estado);  
+            estadoId = 4;
+        }else if(metodo.equals("Tarjeta")){
+            Estado estado = iEstado.findById(3)
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));   
+            
+            pedido.setEstado(estado); 
+            estadoId = 3;
+        }else {
+            throw new RuntimeException("Método de pago no válido"); // Manejar el caso donde el método de pago no es válido
+        }
 
         //Guardar el pedido en la base de datos
         servicePe.Guardar(pedido);
@@ -175,12 +188,55 @@ public class CarritoControlador {
             Estado est = iEstado.findById(2)
                 .orElseThrow(() -> new RuntimeException("Estado no encontrado"));  
             carr.setEstado(est);
-            
+
+            //Si el estado de la compra es directa se disminuye la cantidad de los productos
+            if(estadoId == 3){
+                Producto productoN = carr.getProducto();
+                int actualizarStock = productoN.getProduc_stock() - carr.getCantidad();
+                productoN.setProduc_stock(actualizarStock);
+                serviceP.Guardar(productoN);
+            }
+            //Actualizar el carrito
             service.Guardar(carr);
 
+            //Registrar el detalle
             serviceD.Guardar(detalle);
         });
 
         return "redirect:/Cliente";
+    }
+
+    @GetMapping("/CancelarContraentrega")
+    public String cancelarContraentrega(@RequestParam("id_pedido") int id, Model model){
+
+        Optional<Pedido> pedidoOptional = servicePe.ConsultarId(id);
+
+        if(pedidoOptional.isPresent()){
+            Pedido pedido = pedidoOptional.get();
+
+            Estado estado = iEstado.findById(5)
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+            pedido.setEstado(estado);
+
+            servicePe.Guardar(pedido);
+        }
+
+        return "redirect:/AdminPedidos";
+    }
+
+    @GetMapping("/DetallePedido")
+    public String verDetallePedido(@RequestParam("id_pedido") int id, Model model){
+        Optional<Pedido> pedidoOptional = servicePe.ConsultarId(id);
+
+        if (pedidoOptional.isPresent()) {
+            Pedido pedido = pedidoOptional.get();
+            List<Detalle> detalles = serviceD.Listar().stream()
+                                        .filter(d -> d.getPedido().getPedido_id() == pedido.getPedido_id())
+                                        .collect(Collectors.toList());
+            model.addAttribute("detalles", detalles);
+            return "aDetalleVentas";
+        }else{
+            return "error";
+        }
     }
 }
