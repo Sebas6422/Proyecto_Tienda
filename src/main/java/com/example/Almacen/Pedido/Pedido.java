@@ -21,7 +21,8 @@ public class Pedido {
     private int pedido_id;
     private String pedido_tipo;
     private String pedido_fecha;
-    private double pedido_subtotal;
+    private double pedido_total;
+    private String pedido_metodo_pago;
 
     @ManyToOne
     @JoinColumn(name = "Usuario_us_id", referencedColumnName = "us_id")

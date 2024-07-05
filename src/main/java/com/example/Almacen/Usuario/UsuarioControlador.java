@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.Almacen.Encriptador.Hash;
 import com.example.Almacen.Proveedor.ProveedorControlador;
 import com.example.Almacen.Rol.IRol;
 import com.example.Almacen.Rol.Rol;

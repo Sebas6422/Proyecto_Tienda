@@ -14,7 +14,6 @@
 
 
 
-        <title>Bodega Jany´s</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
             integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
             crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -127,7 +126,7 @@
                             <td style="padding-top: 40px;" th:text="${carrito.carr_subtotal}"></td>
                             <td style="padding-top: 40px;" th:text="${carrito.estado.estado_info}"></td>
                             <td style="padding-top: 40px;">
-                                <a th:href="@{/producto/eliminarProductoCarrito(id_carrito=${carrito.carr_id})}" class="btn btn-dark">Eliminar</a>
+                                <a th:href="@{/carrito/eliminarProductoCarrito(id_carrito=${carrito.carr_id})}" class="btn btn-dark">Eliminar</a>
                             </td>
                         </tr>
                     </tbody>
@@ -177,11 +176,8 @@
 
                     </div>
                     <div class="col-sm-4 " style="display: flex;justify-content: center;">
-                        <form action="pagotarjeta.jsp" method="post">
-
-                            <button type="submit" class="btn btn-light" style="margin-left: 100px;border-radius: 10px;
-                                    padding: 10px;">Comprar</button>                     
-                        </form>
+                        <a th:href="@{/PagoCliente}" class="btn btn-light" style="margin-left: 100px;border-radius: 10px;
+                            padding: 10px;">Comprar</a>                     
                     </div> 
                 </div>   
             </div> 

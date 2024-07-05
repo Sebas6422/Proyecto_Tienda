@@ -115,6 +115,15 @@ public class Controlador {
         return "uLoginUsuario";
     }
 
+    @GetMapping("/PagoCliente")
+    public String pago_cliente(HttpSession session){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+        if (usuario == null) {
+            return "redirect:/"; // Redirige al login si no hay usuario en sesión
+        }
+        return "uPago";
+    }
+
     @GetMapping("/VolverLogin")
     public String volverLogin(Model model) {
         model.addAttribute("error", "Sesión expirada");

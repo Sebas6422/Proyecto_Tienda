@@ -3,7 +3,6 @@ package com.example.Almacen.Producto;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,17 +20,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.Almacen.Carrito.Carrito;
-import com.example.Almacen.Carrito.ICarritoService;
 import com.example.Almacen.Categoria_Producto.Categoria_Producto;
 import com.example.Almacen.Categoria_Producto.ICategoria_Producto;
 import com.example.Almacen.Categoria_Producto.ICategoria_ProductoService;
-import com.example.Almacen.Estado.Estado;
-import com.example.Almacen.Estado.IEstado;
 import com.example.Almacen.Proveedor.IProveedor;
 import com.example.Almacen.Proveedor.IProveedorService;
 import com.example.Almacen.Proveedor.Proveedor;
-import com.example.Almacen.Usuario.IUsuario;
 import com.example.Almacen.Usuario.Usuario;
 
 import jakarta.servlet.http.HttpSession;
@@ -49,9 +43,6 @@ public class ProductoControlador {
     private ICategoria_ProductoService serviceCat;
 
     @Autowired
-    private ICarritoService serviceC;
-
-    @Autowired
     private IProductoService service;
     
     @Autowired
@@ -61,13 +52,7 @@ public class ProductoControlador {
     private ICategoria_Producto cate;
 
     @Autowired
-    private IUsuario usu;
-
-    @Autowired
     private IProveedor prov;
-
-    @Autowired
-    private IEstado est;
 
     private Usuario usuario = new Usuario();
     @GetMapping("/productos/")
@@ -244,74 +229,6 @@ public class ProductoControlador {
             return "error";
         }
     }
-
-    @PostMapping("/AñadirCarrito")
-    public String agregarCarrito(@RequestParam("produc_id") int idP,
-                                @RequestParam("cantidad") int cant,
-                                HttpSession session,
-                                Model model) {
-        Optional<Producto> produOptional = service.ConsultarId(idP);
-        Carrito carrito = new Carrito();
-        Double subtotal = 0.0;
-
-        if (produOptional.isPresent()) {
-            Producto producto = produOptional.get();
-            subtotal = cant * producto.getProduc_precio();
-
-            carrito.setCarr_subtotal(subtotal);
-            Usuario usua = (Usuario) session.getAttribute("Usuario");
-            int idU = usua.getUs_id();
-            Usuario usuario = usu.findById(idU)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-            carrito.setUsu(usuario);
-
-            Producto produc = iProducto.findById(idP)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-            carrito.setProducto(produc);
-
-            Estado estado = est.findById(1)
-                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
-
-            carrito.setEstado(estado);
-            carrito.setCantidad(cant);
-
-            serviceC.Guardar(carrito);
-
-            // para mostrar el carrito del cliente actual
-            List<Carrito> carritos = serviceC.Listar();
-            List<Carrito> carritoC = new ArrayList<>();
-            for (Carrito carr : carritos) {
-                if (carr.getUsu().getUs_id() == usuario.getUs_id() && carr.getEstado().getEstado_id() == 1) {
-                    carritoC.add(carr);
-                }
-            }
-            model.addAttribute("carritosC", carritoC);
-            return "uCarritoCliente";
-        } else {
-            return "error";
-        }
-    }
-
-    @GetMapping("/eliminarProductoCarrito")
-    public String cancelarProducto(@RequestParam("id_carrito") int id,
-                                   Model model, HttpSession session){
-        Optional<Carrito> carrN = serviceC.ConsultarId(id);   
-        Carrito carrActualizado = new Carrito();
-        carrActualizado.setCarr_id(carrN.get().getCarr_id());
-        carrActualizado.setCantidad(carrN.get().getCantidad());
-        carrActualizado.setCarr_subtotal(carrN.get().getCarr_subtotal());
-
-        Estado estado = est.findById(2)
-                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));    
-        carrActualizado.setEstado(estado);
-        
-        carrActualizado.setProducto(carrN.get().getProducto());
-        carrActualizado.setUsu(carrN.get().getUsu());
-        serviceC.Guardar(carrActualizado);
-        return "redirect:/CarritoP";
-    } 
 
     //Validacion de compra
     public static boolean prodcantidad(String cantidad) {
