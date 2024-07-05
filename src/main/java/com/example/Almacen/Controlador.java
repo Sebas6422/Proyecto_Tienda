@@ -117,6 +117,7 @@ public class Controlador {
 
         List<Producto> productos = serviceP.Listar();
         model.addAttribute("productos", productos); 
+
         return "uLoginUsuario";
     }
 
@@ -431,6 +432,8 @@ public class Controlador {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
 
+        List<Producto> productos = serviceP.Listar();
+        model.addAttribute("productos", productos); 
         model.addAttribute("usuario", usuario);
         return "vProductos"; 
     }
@@ -454,7 +457,22 @@ public class Controlador {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
 
+        List<Usuario> usuarios = serviceU.Listar().stream()
+                                    .filter(u -> u.getRol().getRol_id() == 2)
+                                    .collect(Collectors.toList());
+        List<Producto> productos = serviceP.Listar().stream()
+                                        .filter(p -> p.getProduc_stock() > 0)
+                                        .collect(Collectors.toList());
+
+        List<Carrito> carritos = serviceCa.Listar().stream()
+                                        .filter(c -> c.getUsu() != null && c.getUsu().getUs_id() == usuario.getUs_id() && c.getEstado().getEstado_id() == 1)    
+                                        .collect(Collectors.toList());
+                                  
+        
+        model.addAttribute("productos", productos);
+        model.addAttribute("usuarios", usuarios);
         model.addAttribute("usuario", usuario);
+        model.addAttribute("carritos", carritos);
         return "vPuntoVenta"; 
     }
 
@@ -476,8 +494,11 @@ public class Controlador {
         if (!inicio) {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
-
+        List<Pedido> pedidos = servicePedido.Listar().stream()
+                                    .filter(p -> p.getEstado().getEstado_id() == 3)
+                                    .collect(Collectors.toList());
         model.addAttribute("usuario", usuario);
+        model.addAttribute("pedidos", pedidos);
         return "vVentas"; 
     }
 
@@ -499,8 +520,11 @@ public class Controlador {
         if (!inicio) {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
-
+        List<Pedido> pedidos = servicePedido.Listar().stream()
+                                .filter(p -> p.getEstado().getEstado_id() == 4)
+                                .collect(Collectors.toList());
         model.addAttribute("usuario", usuario);
+        model.addAttribute("pedidos", pedidos);
         return "vPedidos"; 
     }
 }

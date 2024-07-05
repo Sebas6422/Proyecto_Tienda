@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -316,5 +318,19 @@ public class UsuarioControlador {
         return celular.matches("^9\\d{8}$");
     }
     
+
+    @GetMapping("/buscarUsuarioDNI")
+    public ResponseEntity<Usuario> buscarUsuarioPorDNI(@RequestParam("dni") String dni){
+        Usuario usuario = service.Listar().stream()
+                                .filter(u -> u.getUs_dni().equals(dni) && u.getRol().getRol_id() == 2)
+                                .findFirst()
+                                .orElse(null);
+
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(usuario);
+    }
     
 }
