@@ -140,12 +140,7 @@
                                                         <td>
                                                             <a class="btn btn-success" th:href="@{/carrito/CancelarContraentrega(id_pedido=${pedido.pedido_id})}">Cancelar</a>
                                                         <td>
-                                                            <form action="GenerarSolicitudServlet" method="post">
-                                                                <input type="hidden" name="opcion" value="update">
-                                                                <input type="hidden" name="gen_id" value="<%= solicitud.getGen_id() %>">
-                                                                <input type="hidden" name="nuevoEstado" value="Registrado">
-                                                                <button type="submit" class="btn btn-danger">Registrar</button>
-                                                            </form>
+                                                            <a th:href="@{/carrito/ConfirmarCompra(id_pedido=${pedido.pedido_id})}" class="btn btn-danger">Registrar</a>
                                                         </td>
 
                                                         </td>
