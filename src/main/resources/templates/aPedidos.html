@@ -127,25 +127,18 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>= solicitud.getGen_id() %></td>
-                                                        <td>= solicitud.getGen_codigo() %></td>
-                                                        <td>= solicitud.getGen_tipo() %></td>
-                                                        <td>= solicitud.getGen_tipo2() %></td>
-                                                        <td>= solicitud.getGen_fecha() %></td>
-                                                        <td>= solicitud.getGen_estado() %></td>
-                                                        <td>= solicitud.getGen_total() %></td>
+                                                    <tr th:each="pedido, status : ${pedidos}">
+                                                        <td th:text="${status.index + 1}"></td>
+                                                        <td th:text="${pedido.usu.us_dni}"></td>
+                                                        <td th:text="${pedido.pedido_metodo_pago}"></td>
+                                                        <td th:text="${pedido.pedido_tipo}"></td>
+                                                        <td th:text="${pedido.pedido_fecha}"></td>
+                                                        <td th:text="${pedido.estado.estado_info}"></td>
+                                                        <td th:text="${pedido.pedido_total}"></td>
 
 
                                                         <td>
-                                                            <form action="GenerarSolicitudServlet" method="post">
-                                                                <input type="hidden" name="opcion" value="cancelar">
-                                                                <input type="hidden" name="gen_id" value="<%= solicitud.getGen_id() %>">
-                                                                <input type="hidden" name="nuevoEstado" value="Cancelado">
-                                                                <button type="submit" class="btn btn-success">Cancelar</button>
-                                                            </form>
-
-
+                                                            <a class="btn btn-success" th:href="@{/carrito/CancelarContraentrega(id_pedido=${pedido.pedido_id})}">Cancelar</a>
                                                         <td>
                                                             <form action="GenerarSolicitudServlet" method="post">
                                                                 <input type="hidden" name="opcion" value="update">
@@ -158,13 +151,7 @@
                                                         </td>
 
                                                         <td>
-                                                            <form action="GenerarSolicitudServlet" method="post">
-
-                                                                <input type="hidden" name="opcion" value="gdetalle">
-                                                                <input type="hidden" name="datobuscar" value="<%= solicitud.getGen_id() %>">
-
-                                                                <button type="submit" class="btn btn-danger">Detalles</button>
-                                                            </form>
+                                                            <a th:href="@{/carrito/DetallePedido(id_pedido=${pedido.pedido_id})}" class="btn btn-danger">Detalles</a>
                                                         </td>
                                                     </tr>
                                                 </tbody>

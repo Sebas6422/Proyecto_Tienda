@@ -2,6 +2,7 @@ package com.example.Almacen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import com.example.Almacen.Carrito.Carrito;
 import com.example.Almacen.Carrito.ICarritoService;
 import com.example.Almacen.Categoria_Producto.Categoria_Producto;
 import com.example.Almacen.Categoria_Producto.ICategoria_ProductoService;
+import com.example.Almacen.Pedido.IPedidoService;
+import com.example.Almacen.Pedido.Pedido;
 import com.example.Almacen.Producto.IProductoService;
 import com.example.Almacen.Producto.Producto;
 import com.example.Almacen.Proveedor.IProveedorService;
@@ -35,6 +38,8 @@ public class Controlador {
     private IUsuarioService serviceU;
     @Autowired
     private ICarritoService serviceCa;
+    @Autowired
+    private IPedidoService servicePedido;
 
     @GetMapping("/")
     public String inicio() {
@@ -319,7 +324,11 @@ public class Controlador {
         if (!inicio) {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
+        List<Pedido> pedidos = servicePedido.Listar().stream()
+                                    .filter(p -> p.getEstado().getEstado_id() == 3)
+                                    .collect(Collectors.toList());
         model.addAttribute("usuario", usuario);
+        model.addAttribute("pedidos", pedidos);
         return "aVentas";
     }
 
@@ -341,7 +350,11 @@ public class Controlador {
         if (!inicio) {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
+        List<Pedido> pedidos = servicePedido.Listar().stream()
+                                .filter(p -> p.getEstado().getEstado_id() == 4)
+                                .collect(Collectors.toList());
         model.addAttribute("usuario", usuario);
+        model.addAttribute("pedidos", pedidos);
         return "aPedidos";
     }
 

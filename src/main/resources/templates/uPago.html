@@ -81,7 +81,7 @@
                 </div>
 
 
-                <form id="form_tarjeta" style="display: none;" action="/carrito/ComprarConTarjeta" method="post">
+                <form id="form_tarjeta" style="display: none;" action="/carrito/Comprar" method="post">
 
                     <input type="hidden" name="metodo_pago" value="Tarjeta">
 
@@ -100,8 +100,7 @@
                     <input type="number" id="codigo_seguridad" name="codigo_seguridad" required><br><br>
 
                     <label for="tipo_tarjeta">Tipo de Tarjeta:</label>
-                    <select id="tipo_tarjeta" name="tipo_tarjeta" required>
-                        <option value="">Seleccione Tarjeta</option>
+                    <select id="tipo_tarjeta" name="tipo_pago" required>
                         <option value="visa">Visa</option>
                         <option value="mastercard">Mastercard</option>
                         <option value="american_express">American Express</option>
@@ -109,12 +108,12 @@
                     <input type="submit" value="Pagar con Tarjeta">
                 </form>
 
-                <form id="form_contraentrega" style="display: none;" action="GenerarSolicitudServlet" method="post">
+                <form id="form_contraentrega" style="display: none;" action="/carrito/Comprar" method="post">
 
-                    <input type="hidden" name="opcion" value="insertarr">
+                    <input type="hidden" name="metodo_pago" value="Contraentrega">
 
                     <h3>Pago Contraentrega</h3>
-                    <select id="tipo_contraentrega" name="nombre_tarjeta" required>
+                    <select id="tipo_contraentrega" name="tipo_pago" required>
                         <option value="yape">Yape</option>
                         <option value="plin">Plin</option>
                         <option value="soles">Soles</option>
