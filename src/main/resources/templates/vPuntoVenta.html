@@ -48,145 +48,270 @@
                                         </div>
 
                                         <div class="row mb-4">
-                                            <div class="col-lg-4">
-                                              <h5 class="letra">DNI</h5>
-                                              <input style="width: 47.5%;display: inline-block;" type="text" class="form-control" placeholder="DNI">                                     
-                                              <button style="width: 25%;display: inline-block;" type="button" class="btn btn-secondary mb-1">Buscar</button>
-                                              <button style="width: 25%;display: inline-block;" type="button" class="btn btn-secondary mb-1">Nuevo</button>
+                                          <div class="col-lg-4">
+                                            <h5 class="letra">DNI</h5>
+                                            <input style="width: 47.5%; display: inline-block;" type="text" class="form-control" placeholder="DNI" id="dniInput">
+                                            <button style="width: 25%; display: inline-block;" type="button" class="btn btn-secondary mb-1" id="buscarDniBtn">Buscar</button>
+                                            <button style="width: 25%; display: inline-block;" type="button" class="btn btn-secondary mb-1" id="nuevoBtn">Nuevo</button>
+                                          </div>
 
-
-                                            </div>
-                                            <div class="col-lg-8">
-                                              <h5 class="letra">Cliente</h5>
-                                              <input style="width: 32%;display: inline-block;" type="text" placeholder="Nombre" class="form-control">
-
-                             
-                                              <input style="width: 32%;display: inline-block;" type="text" placeholder="Apellido" class="form-control">
-
-                                       
-                                              <input style="width: 34.8%;display: inline-block;" type="text" placeholder="Dirección" class="form-control">
-
-                                            </div>
+                                          <div class="col-lg-8">
+                                            <h5 class="letra">Cliente</h5>
+                                            <input style="width: 32%; display: inline-block;" type="text" placeholder="Nombre" class="form-control" id="nombreInput" readonly >
+                                            <input style="width: 32%; display: inline-block;" type="text" placeholder="Apellido" class="form-control" id="apellidoInput" readonly>
+                                            <input style="width: 34.8%; display: inline-block;" type="text" placeholder="Dirección" class="form-control" id="direccionInput" readonly>
+                                          </div>
                                         </div>
+
+                                        <script>
+                                          document.addEventListener("DOMContentLoaded", function() {
+                                            // Selección del botón "Nuevo"
+                                            var nuevoBtn = document.querySelector('#nuevoBtn');
+                                        
+                                            // Función para habilitar los campos de entrada
+                                            function habilitarCampos() {
+                                              //limpiar primero los campos
+                                              document.getElementById('dniInput').value = "";
+                                              document.getElementById('nombreInput').value = "";
+                                              document.getElementById('apellidoInput').value = "";
+                                              document.getElementById('direccionInput').value = "";
+
+                                              document.getElementById('nombreInput').readOnly = false;
+                                              document.getElementById('apellidoInput').readOnly = false;
+                                              document.getElementById('direccionInput').readOnly = false;
+                                            }
+                                        
+                                            // Evento clic para el botón "Nuevo"
+                                            nuevoBtn.addEventListener('click', function() {
+                                              habilitarCampos();
+                                            });
+                                          });
+                                        </script>
+
+                                        <script>
+                                          document.getElementById("buscarDniBtn").addEventListener("click", function() {
+                                              var dni = document.getElementById("dniInput").value;
+                                          
+                                              fetch(`/usuario/buscarUsuarioDNI?dni=${dni}`)
+                                                  .then(response => {
+                                                      if (response.ok) {
+                                                          return response.json();
+                                                      } else {
+                                                          throw new Error('Usuario no encontrado');
+                                                      }
+                                                  })
+                                                  .then(data => {
+                                                    document.getElementById("nombreInput").value = data.us_nombre;
+                                                    document.getElementById("apellidoInput").value = data.us_apellido;
+                                                    document.getElementById("direccionInput").value = data.us_direccion;
+                                                  })
+                                                  .catch(error => {
+                                                      console.error('Error:', error);
+                                                      alert('Cliente no encontrado');
+                                                  });
+                                          });
+                                          </script>
+
+
                                         <div class="row">
                                             <div class="col-lg-4">
                                               <div class="card">
+                                                <form action="/carrito/AñadirCarritoVendedor" method="post">
+                                                  <div class="card-body">
+                                                    <h5 class="card-title letra" >Lista de Productos </h5>
+                                                    
+                                                    <input class="form-control mb-4 inpa" style="display: inline-block; width: 90%;" type="text" placeholder="Buscar Producto" id="buscarProducto">
+                      
+                                                    <table class="table table-striped table-hover">                                     
+                                                      <thead>
+                                                        <tr>                                                                                              
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody id="tbodyProductos">
+                                                        <tr th:each="producto, iterStat : ${productos}" class="producto-row">
+                                                          <td><input type="checkbox" th:value="${producto.produc_id}" th:name="selectedProducts" class="producto-checkbox"></td>
+                                                          <td style="display: none;"> 
+                                                            <img th:src="@{/producto/getImage/{id}(id=${producto.produc_id})}" alt="imagenProducto" style="width: 50px; height: 50px;">
+                                                          </td>
+                                                          <td th:text="${producto.produc_nombre}" style="display: none;"></td>
 
-
-
-                                                <div class="card-body">
-                                                  <h5 class="card-title letra" >Lista de Productos </h5>
-                                                  
-                                                  <input class="form-control mb-4 inpa" style="display: inline-block; width: 90%;" type="text" placeholder="Buscar Producto" >
-                                                  <a href=""><i class="fa-solid fa-magnifying-glass fa-xl" style="color: #ff7b00;"></i></a> 
-                    
-                                                  <table class="table table-striped table-hover">                                     
-                                                    <thead>
-                                                      <tr>                                                                                              
-                                                      </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr>
-                                                        <td><input type="checkbox" name="" id=""></td>
-                                                        <td><img src="" alt=""></td>
-                                                        <td>@mdo</td>
-                                                      </tr>
-                                                      <tr>
-                                                     
-                                                        <td><input type="checkbox" name="" id="" ></td>
-                                                        <td><img src="" alt=""></td>
-                                                        <td>@fat</td>
-                                                      </tr>
-                                                      <tr>
-                                                      
-                                                        <td><input type="checkbox" name="" id=""></td>
-                                                        <td><img src="" alt=""></td>
-                                                        <td>@fat</td>
-                                                      </tr>
-                                                    </tbody>
-         
-                                              </table>
-                                                  <button style="width: 100%;" type="button" class="btn btn-secondary">Agregar</button>
-                                                </div>
-
+                                                          <td class="producto-imagen">
+                                                            <img th:src="@{/producto/getImage/{id}(id=${producto.produc_id})}" alt="imagenProducto" style="width: 50px; height: 50px;">
+                                                          </td>
+                                                          <td class="producto-nombre" th:text="${producto.produc_nombre}"></td>
+                                                        </tr>
+                                                      </tbody>
+          
+                                                    </table>
+                                                    <button style="width: 100%;" type="submit" class="btn btn-secondary">Enviar Selección</button>
+                                                  </div>
+                                                </form>
                                               </div>
                                                 
-
+                                              
+                                              <script>
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                  // Capturar elementos relevantes
+                                                  const buscarInput = document.getElementById('buscarProducto');
+                                                  const filasProductos = document.querySelectorAll('.producto-row');
+                                                  const tbodyProductos = document.getElementById('tbodyProductos');
+                                              
+                                                  // Mostrar solo los primeros 4 productos visualmente al inicio
+                                                  function mostrarPrimeros4Productos() {
+                                                    filasProductos.forEach((fila, index) => {
+                                                      if (index < 4) {
+                                                        fila.style.display = '';
+                                                      } else {
+                                                        fila.style.display = 'none';
+                                                      }
+                                                    });
+                                                  }
+                                              
+                                                  // Llamar a la función para mostrar los primeros 4 productos al cargar la página
+                                                  mostrarPrimeros4Productos();
+                                              
+                                                  // Evento de input en el campo de búsqueda
+                                                  buscarInput.addEventListener('input', function() {
+                                                    const textoBusqueda = this.value.trim().toLowerCase(); // Obtener texto de búsqueda en minúsculas
+                                                    
+                                                    // Array para almacenar las filas que coinciden con la búsqueda
+                                                    let filasCoincidentes = [];
+                                              
+                                                    // Mostrar u ocultar las filas según la búsqueda
+                                                    filasProductos.forEach(function(fila) {
+                                                      const nombreProducto = fila.querySelector('.producto-nombre').textContent.toLowerCase();
+                                                      const imagenProducto = fila.querySelector('.producto-imagen').querySelector('img').alt.toLowerCase();
+                                              
+                                                      if (nombreProducto.includes(textoBusqueda) || imagenProducto.includes(textoBusqueda) || textoBusqueda === '') {
+                                                        filasCoincidentes.push(fila);
+                                                      } else {
+                                                        fila.style.display = 'none';
+                                                      }
+                                                    });
+                                              
+                                                    // Mostrar solo los primeros 4 productos de las filas que coinciden con la búsqueda
+                                                    filasCoincidentes.forEach((fila, index) => {
+                                                      if (index < 4) {
+                                                        fila.style.display = '';
+                                                      } else {
+                                                        fila.style.display = 'none';
+                                                      }
+                                                    });
+                                                  });
+                                                });
+                                              </script>
 
                                             </div>
                                             <div class="col-lg-8">
                                               <div class="card">
-
-                                            <div class="card-body c_listas">
-                                              <h5 class="card-title letra">Detalle de venta</h5>
-                                              <table class="table table-striped table-hover">                                               
-                                                <thead>
-                                                  <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Producto</th>
-                                                    <th scope="col">Nombre</th>
-                                                    <th scope="col">Precio</th>
-                                                    <th scope="col">Cantidad</th>
-                                                    <th scope="col">Subtotal</th>
-                                                    <th scope="col">Eliminar</th>
-                                                  </tr>
-                                                </thead>
-                                                <tbody>
-                                                  <tr>
-                                                    <th scope="row">1</th>
-                                                    <td><img src="" alt=""></td>
-                                                    <td>nombre1</td>
-                                                    <td>precio1</td>
-                                                    <td><input class="form-control inpb" type="text" placeholder="0"></td>
-                                                    <td>subtotal1</td>
-                                                    <td><a href=""><i class="fa-solid fa-trash-can fa-xl" style="color: #ff7b00;"></i></a></td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th scope="row">2</th>
-                                                    <td><img src="" alt=""></td>
-                                                    <td>nombre1</td>
-                                                    <td>precio1</td>
-                                                    <td><input class="form-control inpb" type="text" placeholder="0"></td>
-                                                    <td>subtotal1</td>
-                                                    <td><a href=""><i class="fa-solid fa-trash-can fa-xl" style="color: #ff7b00;"></i></a></td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th scope="row">3</th>
-                                                    <td><img src="" alt=""></td>
-                                                    <td>nombre1</td>
-                                                    <td>precio1</td>
-                                                    <td><input class="form-control inpb" type="text" placeholder="0"></td>
-                                                    <td>subtotal1</td>
-                                                    <td><a href=""><i class="fa-solid fa-trash-can fa-xl" style="color: #ff7b00;"></i></a></td>
-                                                  </tr>
-                                                </tbody>
-                                          </table>
-
-                                              <button style="width: 36%;" type="button" class="btn btn-secondary mb-1">Generar Venta</button>
-                                              <button style="width: 36%;" type="button" class="btn btn-secondary mb-1">Cancelar</button>
-                                              
-                                              <h5 style="width: 10%; display: inline-block; text-align: end;" class="letra">Total:</h5>
-                                              <input style="width: 15%; display: inline-block;" type="text" class="form-control inpb">
-                                            </div>
                                             
+                                                <div class="card-body c_listas">
+                                                  <h5 class="card-title letra">Detalle de venta</h5>
+                                                  <table class="table table-striped table-hover">                                               
+                                                      <thead>
+                                                          <tr>
+                                                              <th scope="col">#</th>
+                                                              <th scope="col">Producto</th>
+                                                              <th scope="col">Nombre</th>
+                                                              <th scope="col">Precio</th>
+                                                              <th scope="col">Cantidad</th>
+                                                              <th scope="col">Subtotal</th>
+                                                              <th scope="col">Eliminar</th>
+                                                          </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                          <tr th:each="carrito, status : ${carritos}">
+                                                              <th scope="row" th:text="${status.index + 1}"></th>
+                                                              <td>
+                                                                  <img th:src="@{/producto/getImage/{id}(id=${carrito.producto.produc_id})}" alt="imagenProducto" style="width: 50px; height: 50px;">
+                                                              </td>
+                                                              <td style="padding-top: 40px;" th:text="${carrito.producto.produc_nombre}"></td>
+                                                              <td style="padding-top: 40px;" th:text="${carrito.producto.produc_precio}"></td>
+                                                              <td>
+                                                                  <input class="form-control inpb" type="text" placeholder="0" value="1" name="cantidad" data-idproducto="${carrito.producto.produc_id}">
+                                                              </td>
+                                                              <td style="padding-top: 40px;" th:text="${carrito.carr_subtotal}"></td>
+                                                              <td>
+                                                                  <a th:href="@{/carrito/eliminarProductoCarrito(id_carrito=${carrito.carr_id})}">
+                                                                      <i class="fa-solid fa-trash-can fa-xl" style="color: #ff7b00;"></i>
+                                                                  </a>
+                                                              </td>
+                                                          </tr>
+                                                      </tbody>
+                                                  </table>
+                                              
+                                                  <a id="generarVentaBtn" style="width: 36%;" type="button" class="btn btn-secondary mb-1">Generar Venta</a>
+                                                  <a th:href="@{/carrito/CancelarVenta}" style="width: 36%;" class="btn btn-secondary mb-1">Cancelar</a>
+                                              
+                                                  <h5 style="width: 10%; display: inline-block; text-align: end;" class="letra">Total:</h5>
+                                                  <input style="width: 15%; display: inline-block;" type="text" class="form-control inpb">
                                               </div>
-                                          
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-                        </div>
-                </section>
-
-            </div>
-        
-        </div>
-    
-
-
-
+                                              
+                                              <script>
+                                                  document.getElementById("generarVentaBtn").addEventListener("click", function() {
+                                                      // Obtener valores de los campos
+                                                      var dni = document.getElementById("dniInput").value.trim();
+                                                      var nombre = document.getElementById("nombreInput").value.trim();
+                                                      var apellido = document.getElementById("apellidoInput").value.trim();
+                                                      var direccion = document.getElementById("direccionInput").value.trim();
+                                              
+                                                      // Array para almacenar las cantidades
+                                                      var cantidades = [];
+                                              
+                                                      // Validar que los campos requeridos estén llenos
+                                                      if (dni === '' || nombre === '' || apellido === '' || direccion === '') {
+                                                          alert('Por favor, llene todos los campos antes de generar la venta.');
+                                                          return; // Detener la ejecución si no se cumplen los requisitos
+                                                      }
+                                              
+                                                      // Recopilar las cantidades de todos los productos en el carrito
+                                                      var productos = document.querySelectorAll('input[name="cantidad"]');
+                                                      productos.forEach(function(producto) {
+                                                          var cantidadProducto = parseInt(producto.value.trim());
+                                                          if (!isNaN(cantidadProducto) && cantidadProducto > 0) {
+                                                              var idProducto = producto.getAttribute('data-idproducto');
+                                                              cantidades.push({
+                                                                  idProducto: idProducto,
+                                                                  cantidad: cantidadProducto
+                                                              });
+                                                          }
+                                                      });
+                                              
+                                                      // Objeto con datos de usuario y cantidades
+                                                      var datosUsuario = {
+                                                          dni: dni,
+                                                          nombre: nombre,
+                                                          apellido: apellido,
+                                                          direccion: direccion,
+                                                          productos: cantidades
+                                                      };
+                                              
+                                                      // Enviar datos al servidor usando fetch API
+                                                      fetch('/carrito/generarVenta', {
+                                                          method: 'POST',
+                                                          headers: {
+                                                              'Content-Type': 'application/json'
+                                                          },
+                                                          body: JSON.stringify(datosUsuario)
+                                                      })
+                                                      .then(response => {
+                                                          if (!response.ok) {
+                                                              throw new Error('Error en la solicitud.');
+                                                          }
+                                                          return response.text(); // Espera un texto simple en la respuesta
+                                                      })
+                                                      .then(data => {
+                                                          console.log("Respuesta del servidor: ", data);
+                                                          alert('Orden generada exitosamente.');
+                                                          window.location.href = '/VendedorPuntoVenta';
+                                                      })
+                                                      .catch(error => {
+                                                          console.error('Error:', error);
+                                                          alert('Ocurrió un error al generar la orden.');
+                                                      });
+                                                  });
+                                              </script>
+                                              
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
