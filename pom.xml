@@ -67,6 +67,13 @@
 			<version>5.7.0</version> 
 		</dependency>
 
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version> <!-- Asegúrate de usar una versión compatible con tus otras dependencias -->
+			<scope>provided</scope> <!-- 'provided' porque Servlet API generalmente es proporcionada por el contenedor web en tiempo de ejecución -->
+		</dependency>
+
 	</dependencies>
 
 	<build>
