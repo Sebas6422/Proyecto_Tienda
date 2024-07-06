@@ -1,5 +1,6 @@
 package com.example.Almacen;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,6 +75,12 @@ public class Controlador {
             return retorno;
         }
     }
+
+     // Método para redirigir rutas incorrectas
+     @GetMapping("/usuario/Login")
+     public String redirectLogin() {
+         return "redirect:/Login";
+     }
 
     @GetMapping("/CarritoP")
     public String carrito_principal(HttpSession session, Model model){
@@ -155,8 +162,35 @@ public class Controlador {
         if (!inicio) {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
+        List<Usuario> usuarios = serviceU.Listar();
+        List<Producto> productos = serviceP.Listar();
+        int totalProductos = productos.size(); 
+        List<Producto> productoStock = productos.stream()
+                                        .filter(p -> p.getProduc_stock() > 0)
+                                        .collect(Collectors.toList());
 
+        double totalVentas = servicePedido.Listar().stream()
+                                        .filter(p -> p.getEstado().getEstado_id() == 3)
+                                        .mapToDouble(Pedido::getPedido_total) // Utiliza mapToDouble para obtener un DoubleStream
+                                        .sum();
+    
+        
+        // Contar productos con stock y sin stock
+        long productosConStock = productoStock.size();
+        //long productosSinStock = totalProductos - productosConStock;
+
+        // Calcular los porcentajes
+        double porcentajeConStock = ((double) productosConStock / totalProductos) * 100;
+        // Formatear el porcentaje a dos decimales
+        DecimalFormat df = new DecimalFormat("0.00");
+        String porcentajeConStockFormateado = df.format(porcentajeConStock);  
+        String totalGanado = df.format(totalVentas);
+
+        model.addAttribute("porcentajeConStock", porcentajeConStockFormateado);
+        model.addAttribute("totalVentas", totalGanado);
+        model.addAttribute("productos", productoStock);
         model.addAttribute("usuario", usuario);
+        model.addAttribute("usuarios", usuarios);
         return "aIndexDashboard";  
     }
 

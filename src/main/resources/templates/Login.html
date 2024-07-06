@@ -121,24 +121,7 @@
                                             <input type="hidden" name="hashedPasswordL" id="hashedPasswordL">
                                         </form>
                                         <script th:src="@{/js/captcha.js}"></script>
-                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-                                        <script>
-                                            document.addEventListener('DOMContentLoaded', function () {
-                                                const loginForm = document.getElementById('loginF');
-                                                const password = document.getElementById('password');
-                                                const hashedPasswordL = document.getElementById('hashedPasswordL');
-                                        
-                                                loginForm.addEventListener('submit', function (event) {
-                                                    event.preventDefault(); // Evita el envío del formulario
-                                        
-                                                    const hashedClave = CryptoJS.SHA256(password.value).toString();
-                                                    hashedPasswordL.value = hashedClave;
-                                        
-                                                    // Enviar el formulario
-                                                    loginForm.submit();
-                                                });
-                                            });
-                                        </script>                                        
+                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>                                       
                                         <style>
                                             .toggle-password {
                                                 cursor: pointer;

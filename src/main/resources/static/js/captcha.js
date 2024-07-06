@@ -1,8 +1,13 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const from = document.querySelector('#login');
+document.addEventListener('DOMContentLoaded', function () {
+    const loginForm = document.getElementById('loginF');
+    const password = document.getElementById('password');
+    const hashedPasswordL = document.getElementById('hashedPasswordL');
 
-    from.addEventListener('submit', (e) => {
-        e.preventDefault();
+    loginForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Evita el envío del formulario
+
+        const hashedClave = CryptoJS.SHA256(password.value).toString();
+        hashedPasswordL.value = hashedClave;
 
         const captchaResponse = grecaptcha.getResponse();
         console.log(captchaResponse.length)
@@ -11,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        from.submit();
-    })
+        // Enviar el formulario
+        loginForm.submit();
+    });
 });
