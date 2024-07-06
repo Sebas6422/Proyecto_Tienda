@@ -102,6 +102,7 @@
                                     <div class="justify-content-end">
 
                                         <form class="form-inline my-2 my-lg-0">
+                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                             <input class="form-control mr-sm-2" type="search" placeholder="Buscar"
                                                    aria-label="Buscar">
                                             <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i
@@ -141,6 +142,7 @@
                                                 </td>
                                                 <td>
                                                     <form action="Procesa" method="post">
+                                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                         <input type="hidden" name="grupo" value="productos">
                                                         <input type="hidden" name="opcion" value="eliminar">
                                                         <input type="hidden" name="produc_nombre">

@@ -82,7 +82,7 @@
 
 
                 <form id="form_tarjeta" style="display: none;" action="/carrito/Comprar" method="post">
-
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <input type="hidden" name="metodo_pago" value="Tarjeta">
 
 
@@ -109,7 +109,7 @@
                 </form>
 
                 <form id="form_contraentrega" style="display: none;" action="/carrito/Comprar" method="post">
-
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <input type="hidden" name="metodo_pago" value="Contraentrega">
 
                     <h3>Pago Contraentrega</h3>
