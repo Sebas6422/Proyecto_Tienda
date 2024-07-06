@@ -97,6 +97,7 @@
                                     </div>
                                     <div class="card-body">
                                         <form id="loginF" action="/usuario/ingresarLogin" method="post">
+                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                             <div class="form-group mx-4">
                                                 <label for="exampleInputEmail1">Correo: </label>
                                                 <input type="text" class="form-control my-2" name="us_correo" aria-describedby="emailHelp"
@@ -168,6 +169,7 @@
                         </div>
                         <div class="modal-body">
                             <form id="loginForm" action="/usuario/registrarCliente" method="post" enctype="multipart/form-data">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 <input type="hidden" name="opcion" value="agregar2">
                                 <input type="hidden" name="grupo" value="usuarios">
                                 <input type="hidden" name="us_roles" value="1">
