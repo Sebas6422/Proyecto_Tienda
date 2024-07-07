@@ -162,7 +162,6 @@
                      style="display: flex;font-size: 25px;padding-bottom: 40px;font-family: Verdana, Geneva, Tahoma, sans-serif">
                     <div class="col-sm-4 " style="display: flex;justify-content: center;">
                         <form action="GenerarSolicitudServlet" method="post">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <input type="hidden" name="opcion" value="eliminarall">
                             <button type="submit" class="btn btn-light" style="margin-left: 100px;border-radius: 10px;
                                     padding: 10px;">Cancelar</button>                     
@@ -171,7 +170,6 @@
                     </div> 
                     <div class="col-sm-4 " style="display: flex;justify-content: center;">
                         <form action="public_in_usuario.jsp" method="post">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <button type="submit" class="btn btn-light" style="margin-left: 100px;border-radius: 10px;
                                     padding: 10px;">Seguir Comprando</button>                     
                         </form>
