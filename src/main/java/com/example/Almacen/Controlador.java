@@ -177,7 +177,6 @@ public class Controlador {
         
         // Contar productos con stock y sin stock
         long productosConStock = productoStock.size();
-        //long productosSinStock = totalProductos - productosConStock;
 
         // Calcular los porcentajes
         double porcentajeConStock = ((double) productosConStock / totalProductos) * 100;
