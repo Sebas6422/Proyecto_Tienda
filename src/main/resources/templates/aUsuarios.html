@@ -97,7 +97,6 @@
                                             <div class="justify-content-end">
                                                
                                                 <form class="form-inline my-2 my-lg-0">
-                                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                     <input class="form-control mr-sm-2" type="search" placeholder="Buscar"
                                                            aria-label="Buscar">
                                                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i
@@ -134,7 +133,6 @@
                                                         <td th:text="${cliente.us_telefono}"></td>
                                                         <td>
                                                             <form action="Procesa" method="get">
-                                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                                 <input type="hidden" name="grupo" value="usuarios">
                                                                 <input type="hidden" name="opcion" value="editar">
                                                                 <input type="hidden" name="principal" value="<%= listausuarios.get(i).getUs_dni() %>">
@@ -156,7 +154,6 @@
                                                 </tbody>
                                             </table>
                      <form action="Procesa" method="get">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                <input type="hidden" name="opcion" value="agregar">
          <input type="hidden" name="grupo" value="usuarios">
                     <button type="submit" class="btn btn-outline-success" style="background-color: #fe9f48;">Registrar</button>

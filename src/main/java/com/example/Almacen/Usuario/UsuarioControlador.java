@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.Almacen.Proveedor.ProveedorControlador;
 import com.example.Almacen.Rol.IRol;
@@ -63,6 +64,7 @@ public class UsuarioControlador {
 
     @GetMapping("/ingresarLogin")
     public String mostrarLogin(HttpSession session, Model model) {
+        logger.info("ingresa a este login raro :V");
         // Transferir los mensajes de sesión al modelo
         if (session.getAttribute("error") != null) {
             model.addAttribute("error", session.getAttribute("error"));
@@ -83,15 +85,20 @@ public class UsuarioControlador {
     @PostMapping("/ingresarLogin")
     public String verificarLogin(@RequestParam(value = "us_correo", required = false) String correo,
                                  @RequestParam(value = "hashedPasswordL", required = false) String contra,
-                                 Model model, HttpSession session) {
-
+                                 RedirectAttributes redirectAttributes,
+                                 HttpSession session) {
+                                    logger.info("Solicitud POST recibida para /ingresarLogin");
+                                    logger.info("Correo: " + correo);
+                                    logger.info("Contraseña: " + contra);
         if (correo == null || correo.isEmpty() || contra == null || contra.isEmpty()) {
             session.setAttribute("error", "Los campos 'Correo' y 'Contraseña' son obligatorios.");
+            redirectAttributes.addFlashAttribute("error", "Credenciales incorrectas");
             return "redirect:/usuario/ingresarLogin";
         }
 
         if (!correoCorrecto(correo)) {
             session.setAttribute("error", "El campo 'Correo' debe ser un correo válido.");
+            redirectAttributes.addFlashAttribute("error", "Credenciales incorrectas");
             return "redirect:/usuario/ingresarLogin";
         }
 
@@ -100,6 +107,7 @@ public class UsuarioControlador {
             long tiempoRestante = (System.currentTimeMillis() - tiempoBloqueo.get(correo)) / 1000;
             if (tiempoRestante < BLOQUEO_TIEMPO_MS / 1000) {
                 session.setAttribute("error", "Cuenta bloqueada. Inténtelo de nuevo en " + (BLOQUEO_TIEMPO_MS / 1000 - tiempoRestante) + " segundos.");
+                redirectAttributes.addFlashAttribute("error", "Credenciales incorrectas");
                 return "redirect:/usuario/ingresarLogin";
             } else {
                 // El periodo de bloqueo ha expirado
@@ -113,48 +121,31 @@ public class UsuarioControlador {
         boolean userFound = false;
 
         for (Usuario usuario : usuarios) {
+            logger.info("Si llega al recorrido del usuario");
             if (usuario.getUs_correo().equals(correo)) {
                 userFound = true;
+                logger.info("Si paso el correo");
                 if (usuario.getUs_contrasenha().equals(contra)) {
-                    Usuario usuarioLo = usuario;
                     if (sesionActivaA(correo)) {
                         session.setAttribute("error", "Esta cuenta ya está logueada.");
                         return "redirect:/usuario/ingresarLogin";
                     }
 
+                    String tokenSesion = UUID.randomUUID().toString();
+                    session.setAttribute("Usuario", usuario);
+                    session.setAttribute("tokenSesion", tokenSesion);
+                    sesionesActivasA.put(usuario.getUs_correo(), tokenSesion);
+                    session.setAttribute("sessionStartTime", System.currentTimeMillis());
+                    intentosFallidos.remove(usuario.getUs_correo());
+
                     if (usuario.getRol().getRol_id() == 1) {
-                        String tokenSesion = UUID.randomUUID().toString();
-                        //guardamos la sesion del usuario con su objeto y tambien su token de sesion
-                        session.setAttribute("Usuario", usuarioLo);
-                        session.setAttribute("tokenSesion", tokenSesion);
-                        sesionesActivasA.put(usuarioLo.getUs_correo(), tokenSesion);
-                        
-                        session.setAttribute("sessionStartTime", System.currentTimeMillis());
-                        // Reiniciar los intentos fallidos al ingresar exitosamente al login
-                        intentosFallidos.remove(usuarioLo.getUs_correo());
+                        redirectAttributes.addFlashAttribute("mensaje", "Inicio de sesión exitoso");
                         return "redirect:/AdminDashIn";
                     } else if (usuario.getRol().getRol_id() == 2) {
-                        // Verifica al usuario
-                        String tokenSesion = UUID.randomUUID().toString();
-                        //guardamos la sesion del usuario con su objeto y tambien su token de sesion
-                        session.setAttribute("Usuario", usuarioLo);
-                        session.setAttribute("tokenSesion", tokenSesion);
-                        sesionesActivasA.put(usuarioLo.getUs_correo(), tokenSesion);
-                        
-                        session.setAttribute("sessionStartTime", System.currentTimeMillis());
-                        // Reiniciar los intentos fallidos al ingresar exitosamente al login
-                        intentosFallidos.remove(usuarioLo.getUs_correo());
+                        redirectAttributes.addFlashAttribute("mensaje", "Inicio de sesión exitoso");
                         return "redirect:/Cliente";
                     } else if (usuario.getRol().getRol_id() == 3) {
-                        String tokenSesion = UUID.randomUUID().toString();
-                        //guardamos la sesion del usuario con su objeto y tambien su token de sesion
-                        session.setAttribute("Usuario", usuarioLo);
-                        session.setAttribute("tokenSesion", tokenSesion);
-                        sesionesActivasA.put(usuarioLo.getUs_correo(), tokenSesion);
-                        
-                        session.setAttribute("sessionStartTime", System.currentTimeMillis());
-                        // Reiniciar los intentos fallidos al ingresar exitosamente al login
-                        intentosFallidos.remove(usuarioLo.getUs_correo());
+                        redirectAttributes.addFlashAttribute("mensaje", "Inicio de sesión exitoso");
                         return "redirect:/VendedorBienvenida";
                     }
                 }
@@ -164,6 +155,7 @@ public class UsuarioControlador {
         if (!userFound) {
             // No se encontró el usuario
             session.setAttribute("error", "Correo o contraseña incorrecta");
+            redirectAttributes.addFlashAttribute("error", "Credenciales incorrectas");
             return "redirect:/usuario/ingresarLogin";
         }
 
@@ -172,8 +164,10 @@ public class UsuarioControlador {
         if (intentosFallidos.get(correo) >= MAX_INTENTOS) {
             tiempoBloqueo.put(correo, System.currentTimeMillis());
             session.setAttribute("error", "Cuenta bloqueada debido a demasiados intentos fallidos. Inténtelo en 1 minuto.");
+            redirectAttributes.addFlashAttribute("error", "Credenciales incorrectas");
         } else {
             session.setAttribute("error", "Correo o contraseña incorrectos. Intento " + intentosFallidos.get(correo) + " de " + MAX_INTENTOS + ".");
+            redirectAttributes.addFlashAttribute("error", "Credenciales incorrectas");
         }
         return "redirect:/usuario/ingresarLogin";
     }
@@ -189,9 +183,8 @@ public class UsuarioControlador {
             sesionesActivasA.remove(correoU);
             session.invalidate(); // Invalida la sesión
             return "redirect:/";
-        } else {
-            return "redirect:/aProveedores";
         }
+        return "redirect:/";
     }
 
 

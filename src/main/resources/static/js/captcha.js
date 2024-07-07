@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const hashedClave = CryptoJS.SHA256(password.value).toString();
         hashedPasswordL.value = hashedClave;
+        password.value = ''
 
         const captchaResponse = grecaptcha.getResponse();
         console.log(captchaResponse.length)
