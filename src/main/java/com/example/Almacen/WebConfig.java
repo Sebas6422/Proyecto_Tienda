@@ -8,10 +8,11 @@ public class WebConfig implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry registry){
         registry.addMapping("/**")
-            .allowedOrigins("GET", "POST")
-            .allowedMethods("Content-Type")
-            .exposedHeaders("Authorization")
-            .allowCredentials(true)
-            .maxAge(3600);
+        .allowedOrigins("https://bodega-janys.azurewebsites.net/")
+        .allowedMethods("GET", "POST")
+        .allowedHeaders("Content-Type")
+        .exposedHeaders("Authorization")
+        .allowCredentials(true)
+        .maxAge(3600);
     }
 }
