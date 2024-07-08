@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Almacen.Carrito.Carrito;
 import com.example.Almacen.Carrito.ICarritoService;
@@ -28,6 +29,7 @@ import com.example.Almacen.Usuario.UsuarioControlador;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@CrossOrigin(origins = "https://bodega-janys.azurewebsites.net/")
 public class Controlador {
 
     @Autowired
@@ -46,6 +48,12 @@ public class Controlador {
     @GetMapping("/")
     public String inicio() {
         return "uIndex";
+    }
+
+    @GetMapping("/api/data")
+    public String getData() {
+        // Lógica para obtener datos
+        return "Datos protegidos por CORS";
     }
 
     @GetMapping("Nosotros")
