@@ -166,11 +166,13 @@ public class ProveedorControlador {
 
     @GetMapping("/editarProveedor")
     public String editarProveedor(@RequestParam("id") int id,
-                                Model model) {
+                                Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
         Optional<Proveedor> proveedorOptional = service.ConsultarId(id);
         if (proveedorOptional.isPresent()) {
             Proveedor proveedor = proveedorOptional.get();
             model.addAttribute("proveedor", proveedor);
+            model.addAttribute("usuario", usuario);
             return "aProveedor_editar";
         } else {
             return "error";

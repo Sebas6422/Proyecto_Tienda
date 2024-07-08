@@ -111,6 +111,23 @@ public class Controlador {
         return volver;
     }
 
+    @GetMapping("/VolverVentas")
+    public String volverDeVentas(HttpSession session){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+
+        if(usuario == null){
+            return "/";
+        }
+        else{
+            if (usuario.getRol().getRol_id() == 1) {
+                return "redirect:/AdminVentas";
+            }else if(usuario.getRol().getRol_id() == 3){
+                return "redirect:/VendedorVentas";
+            }
+        }
+        return "/";
+    }
+
     @GetMapping("/Cliente")
     public String cliente_index(HttpSession session, Model model) {
         Usuario usuario = (Usuario) session.getAttribute("Usuario");
