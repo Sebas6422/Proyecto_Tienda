@@ -3,9 +3,11 @@ package com.example.Almacen.Usuario;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.Almacen.Proveedor.ProveedorControlador;
 import com.example.Almacen.Rol.IRol;
+import com.example.Almacen.Rol.IRolService;
 import com.example.Almacen.Rol.Rol;
 
 import ch.qos.logback.classic.Logger;
@@ -33,6 +36,8 @@ import jakarta.servlet.http.HttpSession;
 public class UsuarioControlador {
     @Autowired
     private IUsuarioService service;
+    @Autowired
+    private IRolService serviceRol;
 
     @Autowired
     private IRol iRol;
@@ -59,6 +64,69 @@ public class UsuarioControlador {
 
     public static boolean sesionActivaA(String correoUsuario) {
         return sesionesActivasA.containsKey(correoUsuario);
+    }
+
+    @GetMapping("/editarUsuario")
+    public String editarUsuario(@RequestParam("id") int id, Model model) {
+        Optional<Usuario> usuarioOptional = service.ConsultarId(id);
+
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+
+            List<Rol> roles = serviceRol.Listar();
+            model.addAttribute("usuario", usuario);
+            model.addAttribute("roles", roles);
+            return "aUsuarios_editar";
+        } else {
+            return "error";
+        }
+    }
+
+    @PostMapping("/actualizarUsuario")
+    public String actualizarUsuario(@RequestParam("id") int us_id,
+                                    @RequestParam("dni") String us_dni,
+                                    @RequestParam("nombre") String us_nombre,
+                                    @RequestParam("apellido") String us_apellido,
+                                    @RequestParam("correo") String us_correo,
+                                    @RequestParam("rol") int rol_id,
+                                    @RequestParam("direccion") String us_direccion,
+                                    @RequestParam("telefono") String us_telefono,
+                                    Model model, HttpSession session){
+        
+        Optional<Usuario> usuarOptional = service.ConsultarId(us_id);
+        
+        if (usuarOptional.isPresent()) {
+            Usuario usuario = usuarOptional.get();
+
+            boolean dnidV = dnid(us_dni);
+            boolean correoV = correo(us_correo);
+            boolean nombreV = nombre(us_nombre);
+            boolean apellidoV = apellido(us_apellido);
+            boolean direccionV = direccion(us_direccion);
+            boolean celularV = celular(us_telefono);
+                                    
+            
+            if(correoV && dnidV && nombreV && apellidoV && direccionV && celularV){   
+                usuario.setUs_dni(us_dni);                            
+                usuario.setUs_nombre(us_nombre);
+                usuario.setUs_apellido(us_apellido);
+                usuario.setUs_correo(us_correo);
+                usuario.setUs_direccion(us_direccion);
+                usuario.setUs_telefono(us_telefono);
+
+                Rol rolUsuario = iRol.findById(rol_id)
+                    .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                usuario.setRol(rolUsuario);
+
+                service.Guardar(usuario);
+                session.setAttribute("success", "El cliente se actualizo con éxito.");
+            }else {
+                session.setAttribute("errorR", "Error al actualizar usuario");
+            }
+        }
+
+        
+        return "redirect:/AdminUsuarios";
     }
 
     @GetMapping("/ingresarLogin")
@@ -254,6 +322,48 @@ public class UsuarioControlador {
         return "redirect:/usuario/ingresarLogin";
     }
 
+
+    @PostMapping("/registrarTrabajador")
+    public String registrarTrabajador(@RequestParam("dni") String us_dni,
+                                @RequestParam("nombre") String us_nombre,
+                                @RequestParam("apellido") String us_apellido,
+                                @RequestParam("correo") String us_correo,
+                                @RequestParam("hashedPassword") String us_clave,
+                                @RequestParam("direccion") String us_direccion,
+                                @RequestParam("telefono") String us_telefono,
+                                Model model, HttpSession session) {
+        Usuario usuario = new Usuario();
+
+        boolean dnidV = dnid(us_dni);
+        boolean correoV = correo(us_correo);
+        boolean nombreV = nombre(us_nombre);
+        boolean apellidoV = apellido(us_apellido);
+        boolean direccionV = direccion(us_direccion);
+        boolean celularV = celular(us_telefono);
+        logger.info(dnidV + " " +correoV + " " +nombreV + " " +apellidoV + " " +direccionV + " " +celularV);
+        if(correoV && dnidV && nombreV && apellidoV && direccionV && celularV){
+            logger.info("se agrego");
+            usuario.setUs_contrasenha(us_clave);            
+            usuario.setUs_dni(us_dni);                            
+            usuario.setUs_nombre(us_nombre);
+            usuario.setUs_apellido(us_apellido);
+            usuario.setUs_correo(us_correo);
+            usuario.setUs_direccion(us_direccion);
+            usuario.setUs_telefono(us_telefono);
+            
+            // Buscamos y asignamos el rol al Cliente
+            Rol rolCliente = iRol.findById(3)
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+            usuario.setRol(rolCliente);
+
+            service.Guardar(usuario);
+            session.setAttribute("success", "El vendedor se registró con éxito.");
+        } else {
+            logger.info("no se agrego");
+            session.setAttribute("errorR", "Error al registrar vendedor");
+        }
+        return "redirect:/AdminUsuarios";
+    }
 
     private static Logger logger = (Logger) LoggerFactory.getLogger(ProveedorControlador.class);
     //USUARIO

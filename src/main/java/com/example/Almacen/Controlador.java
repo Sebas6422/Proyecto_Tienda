@@ -111,6 +111,23 @@ public class Controlador {
         return volver;
     }
 
+    @GetMapping("/VolverVentas")
+    public String volverDeVentas(HttpSession session){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
+
+        if(usuario == null){
+            return "/";
+        }
+        else{
+            if (usuario.getRol().getRol_id() == 1) {
+                return "redirect:/AdminVentas";
+            }else if(usuario.getRol().getRol_id() == 3){
+                return "redirect:/VendedorVentas";
+            }
+        }
+        return "/";
+    }
+
     @GetMapping("/Cliente")
     public String cliente_index(HttpSession session, Model model) {
         Usuario usuario = (Usuario) session.getAttribute("Usuario");
@@ -242,12 +259,22 @@ public class Controlador {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
 
+        if (session.getAttribute("success") != null) {
+            model.addAttribute("success", session.getAttribute("success"));
+            session.removeAttribute("success");
+        }
+        if (session.getAttribute("errorR") != null) {
+            model.addAttribute("errorR", session.getAttribute("errorR"));
+            session.removeAttribute("errorR");
+        }
+        
         List<Usuario> usuarios = serviceU.Listar();
         model.addAttribute("clientes", usuarios);
         model.addAttribute("usuario", usuario);
         return "aUsuarios";  
     }
 
+ 
     @GetMapping("/AdminProductos")
     public String admin_productos(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("Usuario");

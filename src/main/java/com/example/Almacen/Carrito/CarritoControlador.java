@@ -276,7 +276,8 @@ public class CarritoControlador {
     }
 
     @GetMapping("/DetallePedido")
-    public String verDetallePedido(@RequestParam("id_pedido") int id, Model model){
+    public String verDetallePedido(@RequestParam("id_pedido") int id, Model model, HttpSession session){
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
         Optional<Pedido> pedidoOptional = servicePe.ConsultarId(id);
 
         if (pedidoOptional.isPresent()) {
@@ -285,6 +286,7 @@ public class CarritoControlador {
                                         .filter(d -> d.getPedido().getPedido_id() == pedido.getPedido_id())
                                         .collect(Collectors.toList());
             model.addAttribute("detalles", detalles);
+            model.addAttribute("usuario", usuario);
             return "aDetalleVentas";
         }else{
             return "error";

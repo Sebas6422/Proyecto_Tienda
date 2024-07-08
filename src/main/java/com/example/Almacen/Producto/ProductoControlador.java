@@ -56,9 +56,11 @@ public class ProductoControlador {
 
     private Usuario usuario = new Usuario();
     @GetMapping("/productos/")
-    public String Mostrar(Model model) {
+    public String Mostrar(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
         List<Producto> productos = service.Listar();
         model.addAttribute("productos", productos);
+        model.addAttribute("usuario", usuario);
         return "aProductos";
     }
 
@@ -144,13 +146,14 @@ public class ProductoControlador {
     }
 
     @GetMapping("/eliminarProducto")
-    public String eliminarProducto(@RequestParam("id") int id, Model model) {
+    public String eliminarProducto(@RequestParam("id") int id, Model model, HttpSession session) {
         service.Eliminar(id);
-        return Mostrar(model);
+        return Mostrar(model, session);
     }
 
     @GetMapping("/editarProducto")
-    public String editarProducto(@RequestParam("id") int id, Model model) {
+    public String editarProducto(@RequestParam("id") int id,HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");
         Optional<Producto> productoOptional = service.ConsultarId(id);
 
         if (productoOptional.isPresent()) {
@@ -160,6 +163,7 @@ public class ProductoControlador {
             model.addAttribute("producto", producto);
             model.addAttribute("cat_productos", cat_productos);
             model.addAttribute("proveedores", proveedores);
+            model.addAttribute("usuario", usuario);
             return "aProducto_editar";
         } else {
             return "error";
@@ -177,7 +181,7 @@ public class ProductoControlador {
                                     @RequestParam("imagenExistente") String imagenExistente,
                                     @RequestParam("categoria_producto") Integer cat_producto,
                                     @RequestParam("proveedor_id") Integer proveedor_id,
-                                    Model model) {
+                                    Model model, HttpSession session) {
         Producto producto = new Producto();
 
         if (!img.isEmpty()) {
@@ -212,7 +216,6 @@ public class ProductoControlador {
         producto.setProveedor(proveedor);
 
         service.Guardar(producto);
-
         return "redirect:/producto/productos/";
     }
     //Para el Cliente
