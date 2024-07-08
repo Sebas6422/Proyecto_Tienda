@@ -26,7 +26,7 @@ public class ContentSecurityPolicyFilter implements Filter {
                 "connect-src 'self' https://ka-f.fontawesome.com https://trustedapi.example.com https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.jsdelivr.net https://www.google.com https://www.gstatic.com; " +
                 "script-src 'self' 'unsafe-inline' https://code.jquery.com https://kit.fontawesome.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.gstatic.com https://www.google.com https://www.recaptcha.net; " +
                 "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://ka-f.fontawesome.com https://cdn.jsdelivr.net https://www.gstatic.com; " +
-                "frame-src 'self' https://www.google.com");
+                "frame-src 'self' https://www.google.com https://www.recaptcha.net");
 
         chain.doFilter(request, response);
     }
