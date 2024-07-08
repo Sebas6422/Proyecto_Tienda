@@ -24,7 +24,11 @@
         <link rel="stylesheet" th:href="@{/css/estilos3.css}">
     </head>
     <body>  
-        <div th:replace="~{aMenu :: #menu-dashboard}"></div>
+        <!-- Para mostrar el menú para el rol con rol_id == 1 -->
+        <div th:replace="~{aMenu :: #menu-dashboard}" th:if="${usuario.rol.rol_id == 1}"></div>
+
+        <!-- Para mostrar el menú para el rol con rol_nombre == 'Vendedor' -->
+        <div th:replace="~{vMenuVendedor :: #menu-dashboardv}" th:if="${usuario.rol.rol_nombre == 'Vendedor'}"></div>
 
         <div style="margin-left: 17.5rem;">
 

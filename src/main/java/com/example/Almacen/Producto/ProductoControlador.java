@@ -183,7 +183,7 @@ public class ProductoControlador {
                                     @RequestParam("proveedor_id") Integer proveedor_id,
                                     Model model, HttpSession session) {
         Producto producto = new Producto();
-
+        Usuario usuario = (Usuario) session.getAttribute("Usuario");                                
         if (!img.isEmpty()) {
             try {
                 byte[] imgBytes = img.getBytes();
@@ -216,7 +216,16 @@ public class ProductoControlador {
         producto.setProveedor(proveedor);
 
         service.Guardar(producto);
-        return "redirect:/producto/productos/";
+
+        if(usuario.getRol().getRol_id() == 1){
+            return "redirect:/producto/productos/";
+        }else{
+            if (usuario.getRol().getRol_id() == 3) {
+                return "redirect:/VendedorProductos";
+            }
+        }
+
+        return "/";
     }
     //Para el Cliente
     @GetMapping("/VerMasProducto")
