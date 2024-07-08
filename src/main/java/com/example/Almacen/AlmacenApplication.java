@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AlmacenApplication {
+public class almacenApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AlmacenApplication.class, args);
+		SpringApplication.run(almacenApplication.class, args);
 	}
 }

@@ -1,6 +1,6 @@
 package com.example.Almacen.Detalle;
 
-import com.example.Almacen.Carrito.Carrito;
+import com.example.Almacen.carrito.Carrito;
 import com.example.Almacen.Pedido.Pedido;
 
 import jakarta.persistence.Entity;

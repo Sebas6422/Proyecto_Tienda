@@ -5,9 +5,9 @@ import java.util.Optional;
 
 public interface IDetalleService {
     
-    public List<Detalle> Listar();
-    public Optional<Detalle> ConsultarId(int id);
-    public void Guardar(Detalle detalle);
-    public void Eliminar(int id);
-    public List<Detalle> BuscarAll(String desc);
+    public List<Detalle> listar();
+    public Optional<Detalle> consultarId(int id);
+    public void guardar(Detalle detalle);
+    public void eliminar(int id);
+    public List<Detalle> buscarAll(String desc);
 }

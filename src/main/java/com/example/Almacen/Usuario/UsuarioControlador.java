@@ -50,7 +50,7 @@ public class UsuarioControlador {
     private static final long BLOQUEO_TIEMPO_MS = 1 * 60 * 1000; // 1 minuto
 
     @GetMapping("/usuarios")
-    public String Mostrar(Model model, HttpSession session) {
+    public String mostrar(Model model, HttpSession session) {
         String correoUsuario = (String) session.getAttribute("correoUsuario");
         if (correoUsuario == null || !sesionActivaA(correoUsuario)) {
             return "redirect:/";
@@ -83,38 +83,38 @@ public class UsuarioControlador {
     }
 
     @PostMapping("/actualizarUsuario")
-    public String actualizarUsuario(@RequestParam("id") int us_id,
-                                    @RequestParam("dni") String us_dni,
-                                    @RequestParam("nombre") String us_nombre,
-                                    @RequestParam("apellido") String us_apellido,
-                                    @RequestParam("correo") String us_correo,
-                                    @RequestParam("rol") int rol_id,
-                                    @RequestParam("direccion") String us_direccion,
-                                    @RequestParam("telefono") String us_telefono,
+    public String actualizarUsuario(@RequestParam("id") int usId,
+                                    @RequestParam("dni") String usDni,
+                                    @RequestParam("nombre") String usNombre,
+                                    @RequestParam("apellido") String usApellido,
+                                    @RequestParam("correo") String usCorreo,
+                                    @RequestParam("rol") int rolId,
+                                    @RequestParam("direccion") String usDireccion,
+                                    @RequestParam("telefono") String usTelefono,
                                     Model model, HttpSession session){
         
-        Optional<Usuario> usuarOptional = service.ConsultarId(us_id);
+        Optional<Usuario> usuarOptional = service.ConsultarId(usId);
         
         if (usuarOptional.isPresent()) {
             Usuario usuario = usuarOptional.get();
 
-            boolean dnidV = dnid(us_dni);
-            boolean correoV = correo(us_correo);
-            boolean nombreV = nombre(us_nombre);
-            boolean apellidoV = apellido(us_apellido);
-            boolean direccionV = direccion(us_direccion);
-            boolean celularV = celular(us_telefono);
+            boolean dnidV = dnid(usDni);
+            boolean correoV = correo(usCorreo);
+            boolean nombreV = nombre(usNombre);
+            boolean apellidoV = apellido(usApellido);
+            boolean direccionV = direccion(usDireccion);
+            boolean celularV = celular(usTelefono);
                                     
             
             if(correoV && dnidV && nombreV && apellidoV && direccionV && celularV){   
-                usuario.setUs_dni(us_dni);                            
-                usuario.setUs_nombre(us_nombre);
-                usuario.setUs_apellido(us_apellido);
-                usuario.setUs_correo(us_correo);
-                usuario.setUs_direccion(us_direccion);
-                usuario.setUs_telefono(us_telefono);
+                usuario.setUs_dni(usDni);                            
+                usuario.setUs_nombre(usNombre);
+                usuario.setUs_apellido(usApellido);
+                usuario.setUs_correo(usCorreo);
+                usuario.setUs_direccion(usDireccion);
+                usuario.setUs_telefono(usTelefono);
 
-                Rol rolUsuario = iRol.findById(rol_id)
+                Rol rolUsuario = iRol.findById(rolId)
                     .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
                 usuario.setRol(rolUsuario);
 
@@ -283,31 +283,31 @@ public class UsuarioControlador {
 
 
     @PostMapping("/registrarCliente")
-    public String registrarCliente(@RequestParam("dni") String us_dni,
-                                @RequestParam("nombre") String us_nombre,
-                                @RequestParam("apellido") String us_apellido,
-                                @RequestParam("correo") String us_correo,
-                                @RequestParam("hashedPassword") String us_clave,
-                                @RequestParam("direccion") String us_direccion,
-                                @RequestParam("telefono") String us_telefono,
+    public String registrarCliente(@RequestParam("dni") String usDni,
+                                @RequestParam("nombre") String usNombre,
+                                @RequestParam("apellido") String usApellido,
+                                @RequestParam("correo") String usCorreo,
+                                @RequestParam("hashedPassword") String usClave,
+                                @RequestParam("direccion") String usDireccion,
+                                @RequestParam("telefono") String usTelefono,
                                 Model model, HttpSession session) {
         Usuario usuario = new Usuario();
 
-        boolean dnidV = dnid(us_dni);
-        boolean correoV = correo(us_correo);
-        boolean nombreV = nombre(us_nombre);
-        boolean apellidoV = apellido(us_apellido);
-        boolean direccionV = direccion(us_direccion);
-        boolean celularV = celular(us_telefono);
+        boolean dnidV = dnid(usDni);
+        boolean correoV = correo(usCorreo);
+        boolean nombreV = nombre(usNombre);
+        boolean apellidoV = apellido(usApellido);
+        boolean direccionV = direccion(usDireccion);
+        boolean celularV = celular(usTelefono);
 
         if(correoV && dnidV && nombreV && apellidoV && direccionV && celularV){
-            usuario.setUs_contrasenha(us_clave);            
-            usuario.setUs_dni(us_dni);                            
-            usuario.setUs_nombre(us_nombre);
-            usuario.setUs_apellido(us_apellido);
-            usuario.setUs_correo(us_correo);
-            usuario.setUs_direccion(us_direccion);
-            usuario.setUs_telefono(us_telefono);
+            usuario.setUs_contrasenha(usClave);            
+            usuario.setUs_dni(usDni);                            
+            usuario.setUs_nombre(usNombre);
+            usuario.setUs_apellido(usApellido);
+            usuario.setUs_correo(usCorreo);
+            usuario.setUs_direccion(usDireccion);
+            usuario.setUs_telefono(usTelefono);
             
             // Buscamos y asignamos el rol al Cliente
             Rol rolCliente = iRol.findById(2)
@@ -324,32 +324,32 @@ public class UsuarioControlador {
 
 
     @PostMapping("/registrarTrabajador")
-    public String registrarTrabajador(@RequestParam("dni") String us_dni,
-                                @RequestParam("nombre") String us_nombre,
-                                @RequestParam("apellido") String us_apellido,
-                                @RequestParam("correo") String us_correo,
-                                @RequestParam("hashedPassword") String us_clave,
-                                @RequestParam("direccion") String us_direccion,
-                                @RequestParam("telefono") String us_telefono,
+    public String registrarTrabajador(@RequestParam("dni") String usDni,
+                                @RequestParam("nombre") String usNombre,
+                                @RequestParam("apellido") String usApellido,
+                                @RequestParam("correo") String usCorreo,
+                                @RequestParam("hashedPassword") String usClave,
+                                @RequestParam("direccion") String usDireccion,
+                                @RequestParam("telefono") String usTelefono,
                                 Model model, HttpSession session) {
         Usuario usuario = new Usuario();
 
-        boolean dnidV = dnid(us_dni);
-        boolean correoV = correo(us_correo);
-        boolean nombreV = nombre(us_nombre);
-        boolean apellidoV = apellido(us_apellido);
-        boolean direccionV = direccion(us_direccion);
-        boolean celularV = celular(us_telefono);
+        boolean dnidV = dnid(usDni);
+        boolean correoV = correo(usCorreo);
+        boolean nombreV = nombre(usNombre);
+        boolean apellidoV = apellido(usApellido);
+        boolean direccionV = direccion(usDireccion);
+        boolean celularV = celular(usTelefono);
         logger.info(dnidV + " " +correoV + " " +nombreV + " " +apellidoV + " " +direccionV + " " +celularV);
         if(correoV && dnidV && nombreV && apellidoV && direccionV && celularV){
             logger.info("se agrego");
-            usuario.setUs_contrasenha(us_clave);            
-            usuario.setUs_dni(us_dni);                            
-            usuario.setUs_nombre(us_nombre);
-            usuario.setUs_apellido(us_apellido);
-            usuario.setUs_correo(us_correo);
-            usuario.setUs_direccion(us_direccion);
-            usuario.setUs_telefono(us_telefono);
+            usuario.setUs_contrasenha(usClave);            
+            usuario.setUs_dni(usDni);                            
+            usuario.setUs_nombre(usNombre);
+            usuario.setUs_apellido(usApellido);
+            usuario.setUs_correo(usCorreo);
+            usuario.setUs_direccion(usDireccion);
+            usuario.setUs_telefono(usTelefono);
             
             // Buscamos y asignamos el rol al Cliente
             Rol rolCliente = iRol.findById(3)

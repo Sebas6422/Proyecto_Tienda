@@ -1,4 +1,4 @@
-package com.example.Almacen.Carrito;
+package com.example.Almacen.carrito;
 
 import com.example.Almacen.Estado.Estado;
 import com.example.Almacen.Producto.Producto;

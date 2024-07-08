@@ -1,4 +1,4 @@
-package com.example.Almacen.Carrito;
+package com.example.Almacen.carrito;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,27 +12,27 @@ public class CarritoService implements ICarritoService{
     @Autowired ICarrito data;
 
     @Override
-    public List<Carrito> Listar() {
+    public List<Carrito> listar() {
         return (List<Carrito>) data.findAll();
     }   
 
     @Override
-    public Optional<Carrito> ConsultarId(int id) {
+    public Optional<Carrito> consultarId(int id) {
         return data.findById(id);
     }
 
     @Override
-    public void Guardar(Carrito carrito) {
+    public void guardar(Carrito carrito) {
         data.save(carrito);
     }
 
     @Override
-    public void Eliminar(int id) {
+    public void eliminar(int id) {
         data.deleteById(id);
     }
 
     @Override
-    public List<Carrito> BuscarAll(String desc) {
+    public List<Carrito> buscarAll(String desc) {
         return data.buscarPorTodo(desc);
     }
     

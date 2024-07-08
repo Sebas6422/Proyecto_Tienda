@@ -1,4 +1,4 @@
-package com.example.Almacen.Categoria_Producto;
+package com.example.Almacen.CategoriaProducto;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="Categoria_producto")
-public class Categoria_Producto {
+public class CategoriaProducto {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int catProduct_id;

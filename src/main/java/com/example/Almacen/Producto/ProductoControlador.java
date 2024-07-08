@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.Almacen.Categoria_Producto.Categoria_Producto;
-import com.example.Almacen.Categoria_Producto.ICategoria_Producto;
-import com.example.Almacen.Categoria_Producto.ICategoria_ProductoService;
+import com.example.Almacen.CategoriaProducto.CategoriaProducto;
+import com.example.Almacen.CategoriaProducto.ICategoriaProducto;
+import com.example.Almacen.CategoriaProducto.ICategoriaProductoService;
 import com.example.Almacen.Proveedor.IProveedor;
 import com.example.Almacen.Proveedor.IProveedorService;
 import com.example.Almacen.Proveedor.Proveedor;
@@ -40,7 +40,7 @@ public class ProductoControlador {
     @Autowired
     private IProveedorService serviceProv;
     @Autowired
-    private ICategoria_ProductoService serviceCat;
+    private ICategoriaProductoService serviceCat;
 
     @Autowired
     private IProductoService service;
@@ -49,7 +49,7 @@ public class ProductoControlador {
     private IProducto iProducto;
 
     @Autowired
-    private ICategoria_Producto cate;
+    private ICategoriaProducto cate;
 
     @Autowired
     private IProveedor prov;
@@ -131,7 +131,7 @@ public class ProductoControlador {
         pro.setProduc_stock(stock);
 
         // Buscamos y asignamos la categoría del Producto
-        Categoria_Producto categoriaProducto = cate.findById(cat_producto)
+        CategoriaProducto categoriaProducto = cate.findById(cat_producto)
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
         pro.setCategoriaProducto(categoriaProducto);
 
@@ -158,7 +158,7 @@ public class ProductoControlador {
 
         if (productoOptional.isPresent()) {
             Producto producto = productoOptional.get();
-            List<Categoria_Producto> cat_productos = serviceCat.Listar();
+            List<CategoriaProducto> cat_productos = serviceCat.listar();
             List<Proveedor> proveedores = serviceProv.Listar();
             model.addAttribute("producto", producto);
             model.addAttribute("cat_productos", cat_productos);
@@ -206,7 +206,7 @@ public class ProductoControlador {
         producto.setProduc_stock(stock);
 
         // Buscamos y asignamos la categoría del Producto
-        Categoria_Producto categoriaProducto = cate.findById(cat_producto)
+        CategoriaProducto categoriaProducto = cate.findById(cat_producto)
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
         producto.setCategoriaProducto(categoriaProducto);
 

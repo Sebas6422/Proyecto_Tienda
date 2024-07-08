@@ -13,27 +13,27 @@ public class EstadoService implements IEstadoService{
     private IEstado data;
 
     @Override
-    public List<Estado> Listar() {
+    public List<Estado> listar() {
         return (List<Estado>) data.findAll();
     }
 
     @Override
-    public Optional<Estado> ConsultarId(int id) {
+    public Optional<Estado> consultarId(int id) {
         return data.findById(id);
     }
 
     @Override
-    public void Guardar(Estado estado) {
+    public void guardar(Estado estado) {
         data.save(estado);
     }
 
     @Override
-    public void Eliminar(int id) {
+    public void eliminar(int id) {
         data.deleteById(id);
     }
 
     @Override
-    public List<Estado> BuscarAll(String desc) {
+    public List<Estado> buscarAll(String desc) {
         return data.buscarPorTodo(desc);
     }
     

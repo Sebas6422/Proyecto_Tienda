@@ -1,4 +1,4 @@
-package com.example.Almacen.Carrito;
+package com.example.Almacen.carrito;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;

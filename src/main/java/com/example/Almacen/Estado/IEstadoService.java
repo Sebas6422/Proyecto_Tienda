@@ -5,9 +5,9 @@ import java.util.Optional;
 
 public interface IEstadoService {
     
-    public List<Estado> Listar();
-    public Optional<Estado> ConsultarId(int id);
-    public void Guardar(Estado estado);
-    public void Eliminar(int id);
-    public List<Estado> BuscarAll(String desc);
+    public List<Estado> listar();
+    public Optional<Estado> consultarId(int id);
+    public void guardar(Estado estado);
+    public void eliminar(int id);
+    public List<Estado> buscarAll(String desc);
 }

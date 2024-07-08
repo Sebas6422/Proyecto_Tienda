@@ -11,10 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.example.Almacen.Carrito.Carrito;
-import com.example.Almacen.Carrito.ICarritoService;
-import com.example.Almacen.Categoria_Producto.Categoria_Producto;
-import com.example.Almacen.Categoria_Producto.ICategoria_ProductoService;
+import com.example.Almacen.carrito.Carrito;
+import com.example.Almacen.carrito.ICarritoService;
+import com.example.Almacen.CategoriaProducto.CategoriaProducto;
+import com.example.Almacen.CategoriaProducto.ICategoriaProductoService;
 import com.example.Almacen.Pedido.IPedidoService;
 import com.example.Almacen.Pedido.Pedido;
 import com.example.Almacen.Producto.IProductoService;
@@ -24,6 +24,8 @@ import com.example.Almacen.Proveedor.Proveedor;
 import com.example.Almacen.Usuario.IUsuarioService;
 import com.example.Almacen.Usuario.Usuario;
 import com.example.Almacen.Usuario.UsuarioControlador;
+import com.example.Almacen.carrito.Carrito;
+import com.example.Almacen.carrito.ICarritoService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -36,7 +38,7 @@ public class Controlador {
     @Autowired
     private IProductoService serviceP;
     @Autowired
-    private ICategoria_ProductoService serviceC;
+    private ICategoriaProductoService serviceC;
     @Autowired
     private IUsuarioService serviceU;
     @Autowired
@@ -97,7 +99,7 @@ public class Controlador {
         if(usuario != null){
             if (usuario.getRol().getRol_id() != 1 && usuario.getRol().getRol_id() != 3) {
                 // para mostrar el carrito del cliente actual
-                List<Carrito> carritos = serviceCa.Listar();
+                List<Carrito> carritos = serviceCa.listar();
                 List<Carrito> carritoC = new ArrayList<>();
                 for (Carrito carr : carritos) {
                     if (carr.getUsu().getUs_id() == usuario.getUs_id() && carr.getEstado().getEstado_id() == 1) {
@@ -319,7 +321,7 @@ public class Controlador {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
 
-        List<Categoria_Producto> cat_productos = serviceC.Listar();
+        List<CategoriaProducto> cat_productos = serviceC.listar();
         List<Proveedor> proveedores = service.Listar();
         model.addAttribute("cat_productos", cat_productos);
         model.addAttribute("proveedores", proveedores);
@@ -532,7 +534,7 @@ public class Controlador {
                                         .filter(p -> p.getProduc_stock() > 0)
                                         .collect(Collectors.toList());
 
-        List<Carrito> carritos = serviceCa.Listar().stream()
+        List<Carrito> carritos = serviceCa.listar().stream()
                                         .filter(c -> c.getUsu() != null && c.getUsu().getUs_id() == usuario.getUs_id() && c.getEstado().getEstado_id() == 1)    
                                         .collect(Collectors.toList());
                                   

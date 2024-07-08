@@ -2,7 +2,7 @@ package com.example.Almacen.Producto;
 
 import java.sql.Blob;
 
-import com.example.Almacen.Categoria_Producto.Categoria_Producto;
+import com.example.Almacen.CategoriaProducto.CategoriaProducto;
 import com.example.Almacen.Proveedor.Proveedor;
 
 import jakarta.persistence.Entity;
@@ -34,5 +34,5 @@ public class Producto {
 
     @ManyToOne
     @JoinColumn(name = "Categoria_Producto", referencedColumnName = "catProduct_id")
-    private Categoria_Producto categoriaProducto;
+    private CategoriaProducto categoriaProducto;
 }

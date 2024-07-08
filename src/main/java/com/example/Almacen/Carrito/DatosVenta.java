@@ -1,16 +1,16 @@
-package com.example.Almacen.Carrito;
+package com.example.Almacen.carrito;
 
 import java.util.List;
 
 
-public class DatosVenta {
+public class datosVenta {
     private String dni;
     private String nombre;
     private String apellido;
     private String direccion;
     private List<Carrito> productos;
 
-    public DatosVenta() {
+    public datosVenta() {
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.Almacen.Carrito;
+package com.example.Almacen.carrito;
 
 
 
@@ -104,10 +104,10 @@ public class CarritoControlador {
 
             carrito.setCantidad(cant);
 
-            service.Guardar(carrito);
+            service.guardar(carrito);
 
             // para mostrar el carrito del cliente actual
-            List<Carrito> carritos = service.Listar();
+            List<Carrito> carritos = service.listar();
             List<Carrito> carritoC = carritos.stream()
                                         .filter(carr -> carr.getUsu().getUs_id() == usua.getUs_id() && carr.getEstado().getEstado_id() == 1)
                                         .collect(Collectors.toList());
@@ -123,7 +123,7 @@ public class CarritoControlador {
     public String cancelarProducto(@RequestParam("id_carrito") int id,
                                    Model model, HttpSession session){
         Usuario usua = (Usuario) session.getAttribute("Usuario");
-        Optional<Carrito> carrN = service.ConsultarId(id);   
+        Optional<Carrito> carrN = service.consultarId(id);   
         Carrito carrActualizado = new Carrito();
         carrActualizado.setCarr_id(carrN.get().getCarr_id());
         carrActualizado.setCantidad(carrN.get().getCantidad());
@@ -135,7 +135,7 @@ public class CarritoControlador {
         
         carrActualizado.setProducto(carrN.get().getProducto());
         carrActualizado.setUsu(carrN.get().getUsu());
-        service.Guardar(carrActualizado);
+        service.guardar(carrActualizado);
 
         if(usua.getRol().getRol_id() == 2)
             return "redirect:/CarritoP";
@@ -154,7 +154,7 @@ public class CarritoControlador {
         final int estadoId;
         LocalDate fechaActual = LocalDate.now();
         Pedido pedido = new Pedido();
-        List<Carrito> carrito = service.Listar();
+        List<Carrito> carrito = service.listar();
         List<Carrito> carritoFiltrado = carrito.stream()
                                         .filter(c -> c.getUsu().getUs_id() == usua.getUs_id() && c.getEstado().getEstado_id() == 1)
                                         .collect(Collectors.toList());
@@ -211,10 +211,10 @@ public class CarritoControlador {
                 serviceP.Guardar(productoN);
             }
             //Actualizar el carrito
-            service.Guardar(carr);
+            service.guardar(carr);
 
             //Registrar el detalle
-            serviceD.Guardar(detalle);
+            serviceD.guardar(detalle);
         });
 
         if(usua.getRol().getRol_id() == 1)
@@ -282,7 +282,7 @@ public class CarritoControlador {
 
         if (pedidoOptional.isPresent()) {
             Pedido pedido = pedidoOptional.get();
-            List<Detalle> detalles = serviceD.Listar().stream()
+            List<Detalle> detalles = serviceD.listar().stream()
                                         .filter(d -> d.getPedido().getPedido_id() == pedido.getPedido_id())
                                         .collect(Collectors.toList());
             model.addAttribute("detalles", detalles);
@@ -317,7 +317,7 @@ public class CarritoControlador {
 
                     carrito.setUsu(usua);
 
-                    service.Guardar(carrito);
+                    service.guardar(carrito);
                 }
             });
         }
@@ -328,7 +328,7 @@ public class CarritoControlador {
     @GetMapping("/CancelarVenta")
     public String cancelarVenta(HttpSession session){
         Usuario usua = (Usuario) session.getAttribute("Usuario");
-        List<Carrito> carrito = service.Listar().stream()
+        List<Carrito> carrito = service.listar().stream()
                                     .filter(c -> c.getUsu().getUs_id() == usua.getUs_id())
                                     .collect(Collectors.toList());
 
@@ -337,14 +337,14 @@ public class CarritoControlador {
                         .orElseThrow(() -> new RuntimeException("Estado no encontrado")); 
             
             c.setEstado(estado);
-            service.Guardar(c);
+            service.guardar(c);
         });
 
         return "redirect:/VendedorPuntoVenta";
     }
 
     @PostMapping("/generarVenta")
-    public ResponseEntity<String> generarVenta(@RequestBody DatosVenta datos, HttpSession session){
+    public ResponseEntity<String> generarVenta(@RequestBody datosVenta datos, HttpSession session){
         Usuario usuario = (Usuario) session.getAttribute("Usuario");
         LocalDate fechaActual = LocalDate.now();
         Usuario usuarioC = serviceU.Listar().stream()
@@ -352,7 +352,7 @@ public class CarritoControlador {
                                     .findFirst()
                                     .orElse(null);
 
-        List<Carrito> carrito = service.Listar().stream()
+        List<Carrito> carrito = service.listar().stream()
                                     .filter(c -> c.getEstado().getEstado_id() == 1 && c.getUsu() != null && c.getUsu().getUs_id() == usuario.getUs_id())
                                     .collect(Collectors.toList());
         
@@ -373,7 +373,7 @@ public class CarritoControlador {
                         .orElseThrow(() -> new RuntimeException("Estado no encontrado")); 
                 c.setEstado(estado);
 
-                service.Guardar(c);
+                service.guardar(c);
             }
 
             Pedido pedido = new Pedido();
@@ -398,7 +398,7 @@ public class CarritoControlador {
                 detalle.setCarrito(c);
                 detalle.setPedido(pedido);
 
-                serviceD.Guardar(detalle);
+                serviceD.guardar(detalle);
             });
         }
         return ResponseEntity.ok("Orden generada exitosamente.");
