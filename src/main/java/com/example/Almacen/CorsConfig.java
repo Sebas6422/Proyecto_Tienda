@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://bodega-janys.azurewebsites.net/")
+                .allowedOrigins("http://localhost:9095", "https://bodega-janys.azurewebsites.net")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*") 
                 .allowCredentials(true); 
