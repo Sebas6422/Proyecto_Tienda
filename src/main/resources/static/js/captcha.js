@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     loginForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Evita el envío del formulario
+        console.log("si ingresa aqui")
 
         const hashedClave = CryptoJS.SHA256(password.value).toString();
         hashedPasswordL.value = hashedClave;
