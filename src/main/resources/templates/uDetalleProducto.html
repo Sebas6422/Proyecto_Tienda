@@ -126,67 +126,21 @@
                             <tbody>
                                 <tr>
                                     <td>-Tamaño</td>
-                                    <td> prod.getProduc_tamaño() %></td>
+                                    <td th:text="${producto.produc_tamanho}"></td>
                                 </tr>
                                 <tr>
                                     <td>- Marca</td>
-                                    <td> prod.getProduc_marca() %></td>
+                                    <td th:text="${producto.proveedor.prov_marca}"></td>
                                 </tr>
                                 <tr>
                                     <td>- Caracteristica</td>
-                                    <td> prod.getProduc_caracteristica() %>
+                                    <td th:text="${producto.produc_caracteristica}">
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td>- En Oferta</td>
-                                    <td>- No </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>  
-                <div class="col-sm-3"></div>
-            </div>
-
-            <div class="row">
-
-                <div class="col-sm-4"></div>     
-                <div class="col-sm-4">
-                    <h4 class="pro_rela">PRODUCTOS RELACIONADOS</h4>
-                </div>  
-                <div class="col-sm-4"></div>
-            </div>
-
-            <div class="row">
-
-                <div class="col-sm-3"></div>     
-                <div class="col-sm-6">
-                    <div class="card-group cont_nuevo">
-                        <div class="card nuevo">
-                            <img src="" alt="" class="imagen-pequena">
-                            <div class="card-body">
-                                <center>
-                                    <h5 class="card-title"> prod.getProduc_nombre() %></h5>
-                                    <p >Stock:  prod.getProduc_cantidad() %></p>
-                                    <p >Precio :  S/. prod.getProduc_precio() %></p>   
-                                        <form action="ProductosServlet" method="get">
-                                 <input type="hidden" name="grupo" value="productos">
-                                  <input type="hidden" name="opcion" value="ver">
-                                                       
-                               <input type="hidden" name="principal" value="">
-                                <input type="hidden" name="principal2" value="">
-                                <input type="hidden" name="principal3" value="">
-                                  
-                                <button  type="submit" class="btn btn-outline-secondary form-control">Ver más</button>  
-                            </form>
-                                </center>
-
-                            </div>                        
-                        </div>
-                    </div>
-                </div>
-
-
                 <div class="col-sm-3"></div>
             </div>
 
