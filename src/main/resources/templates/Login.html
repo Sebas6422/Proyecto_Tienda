@@ -163,53 +163,59 @@
 
                     </div>
                     <div class="modal-body">
-                        <form id="loginForm" action="/usuario/registrarCliente" method="post" enctype="multipart/form-data">
+                        <form id="loginForm2" action="/usuario/registrarCliente" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="opcion" value="agregar2">
                             <input type="hidden" name="grupo" value="usuarios">
                             <input type="hidden" name="us_roles" value="1">
                             <div class="form-group col-lg-6">
                                 <label for="dni">DNI</label>
-                                <input type="text" class="form-control my-2" name="dni" id="dni" required placeholder="Ingrese su usuario">
-                        
+                                <input type="text" class="form-control my-2" name="dni" id="dni" required placeholder="Ingrese su usuario" maxlength="8">
+                            
                                 <label for="nombre">Nombres</label>
-                                <input type="text" class="form-control my-2" name="nombre" id="nombre" required placeholder="Ingrese su nombre">
-                        
+                                <input type="text" class="form-control my-2" name="nombre" id="nombre" required placeholder="Ingrese su nombre" maxlength="50">  
+                            
                                 <label for="apellido">Apellidos</label>
-                                <input type="text" class="form-control my-2" name="apellido" id="apellido" required placeholder="Ingrese su apellido">
-                        
+                                <input type="text" class="form-control my-2" name="apellido" id="apellido" required placeholder="Ingrese su apellido" maxlength="50">
+                            
                                 <label for="correo">Correo</label>
-                                <input type="email" class="form-control my-2" name="correo" id="correo_registro" required placeholder="Ingrese su correo">
-                        
+                                <input type="email" class="form-control my-2" name="correo" id="correo_registro" required placeholder="Ingrese su correo" maxlength="50">
+                            
                                 <label for="registerPassword">Contraseña</label>
-                                <input type="password" class="form-control my-2" name="contraseña" id="registerPassword" required placeholder="Ingrese su contraseña">
-                        
+                                <input type="password" class="form-control my-2" name="contraseña" id="registerPassword" required placeholder="Ingrese su contraseña" maxlength="50" minlength="8">
+                            
                                 <label for="direccion">Dirección</label>
-                                <input type="text" class="form-control my-2" name="direccion" id="direccion" required placeholder="Ingrese su dirección">
-                        
+                                <input type="text" class="form-control my-2" name="direccion" id="direccion" required placeholder="Ingrese su dirección" maxlength="50">
+                            
                                 <label for="telefono">Telefono</label>
-                                <input type="text" class="form-control my-2" name="telefono" id="telefono" required placeholder="Ingrese su teléfono">
-                        
+                                <input type="text" class="form-control my-2" name="telefono" id="telefono" required placeholder="Ingrese su teléfono" maxlength="9">
+                            
                                 <!-- Campo oculto para la contraseña hasheada -->
-                                <input type="hidden" name="hashedPassword" id="hashedPassword">
+                                <input type="hidden" name="hashedPassword" id="hashedPasswordR">
                             </div>
-                            <button type="submit" id="submitButton" class="btn btn-dark mt-2" style="background-color: #fe9f48;">Registrar</button>
+                            <button type="button" id="submitButton" class="btn btn-dark mt-2" style="background-color: #fe9f48;">Registrar</button>
                         </form>
                         
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
                         <script>
                             document.addEventListener('DOMContentLoaded', function () {
-                                const loginForm = document.getElementById('loginForm');
+                                const loginForm = document.getElementById('loginForm2');
                                 const registerPassword = document.getElementById('registerPassword');
-                                const hashedPassword = document.getElementById('hashedPassword');
+                                const hashedPasswordR = document.getElementById('hashedPasswordR');
                         
                                 loginForm.addEventListener('submit', function (event) {
                                     event.preventDefault(); // Evita el envío del formulario
                         
                                     const hashedClave = sha256(registerPassword.value);
-                                    hashedPassword.value = hashedClave;
+                                    hashedPasswordR.value = hashedClave;
                     
-                                    // Enviar el formulario
-                                    loginForm.submit();
+                                    console.log("hashedPasswordR: " + hashedPasswordR.value); // Verificar el valor hasheado en la consola
+                        
+                                    // Limpiar el valor de la contraseña original
+                                    registerPassword.value = "";
+                                    console.log("La constraseña es: "+registerPassword)
+                                    console.log("se esta enviando el : "+hashedPasswordR)
+                        
+                                    // Enviar el formulario después de un breve retraso para asegurar que el valor de hashedPasswordR se actualice
                                 });
                             });
                         </script>
