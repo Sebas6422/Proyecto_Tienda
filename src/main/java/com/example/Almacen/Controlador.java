@@ -242,12 +242,22 @@ public class Controlador {
             return "redirect:/"; // Redirige al login si el token no es válido
         }
 
+        if (session.getAttribute("success") != null) {
+            model.addAttribute("success", session.getAttribute("success"));
+            session.removeAttribute("success");
+        }
+        if (session.getAttribute("errorR") != null) {
+            model.addAttribute("errorR", session.getAttribute("errorR"));
+            session.removeAttribute("errorR");
+        }
+        
         List<Usuario> usuarios = serviceU.Listar();
         model.addAttribute("clientes", usuarios);
         model.addAttribute("usuario", usuario);
         return "aUsuarios";  
     }
 
+ 
     @GetMapping("/AdminProductos")
     public String admin_productos(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("Usuario");

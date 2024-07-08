@@ -19,6 +19,12 @@
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
         <script th:src="@{js/app.js}" defer></script>
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+
+
         <link rel="stylesheet" th:href="@{css/estilos.css}">
         <link rel="stylesheet" th:href="@{css/estilos2.css}">
         <link rel="stylesheet" th:href="@{css/estilos3.css}">
@@ -52,7 +58,7 @@
                                         <div class="col-lg-12 my-3 d-flex">
                                             <div class="mx-auto">
                                                 <h6 class="text-dark">Cantidad de Usuarios</h6>
-                                                <h3 class="text-dark" style="text-align: center;">9</h3>
+                                                <h3 class="text-dark" style="text-align: center;" th:text="${#lists.size(clientes)}"></h3>
                                             </div>
                                         </div>
                                     </div>
@@ -123,8 +129,8 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr th:each="cliente : ${clientes}">
-                                                        <td th:text="${cliente.us_id}"></td>
+                                                    <tr th:each="cliente, status : ${clientes}">
+                                                        <td th:text="${status.index + 1}"></td>
                                                         <td th:text="${cliente.rol.rol_nombre}"></td>
                                                         <td th:text="${cliente.us_dni}"></td>
                                                         <td th:text="${cliente.us_nombre}"></td>
@@ -133,13 +139,7 @@
                                                         <td th:text="${cliente.us_direccion}"></td>
                                                         <td th:text="${cliente.us_telefono}"></td>
                                                         <td>
-                                                            <form action="Procesa" method="get">
-                                                                <input type="hidden" name="grupo" value="usuarios">
-                                                                <input type="hidden" name="opcion" value="editar">
-                                                                <input type="hidden" name="principal" value="<%= listausuarios.get(i).getUs_dni() %>">
-                                                                    <button type="submit" class="btn btn-small btn-outline-primary" style="background-color: #fe9f48;">EDITAR</button>
-                                                            </form>
-                                                            
+                                                            <a th:href="@{/usuario/editarUsuario(id=${cliente.us_id})}" target="_self" class="btn btn-small btn-primary">EDITAR</a>
                                                         </td>
                                                         
                                                         <td>
@@ -149,24 +149,70 @@
                                                                 <input type="hidden" name="us_dni" value="<%= listausuarios.get(i).getUs_dni() %>">
                                                                 <button type="submit" class="btn btn-small btn-outline-danger" style="background-color: #fe9f48;">ELIMINAR</button>
                                                             </form>
-                                                            
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-                     <form action="Procesa" method="get">
-               <input type="hidden" name="opcion" value="agregar">
-         <input type="hidden" name="grupo" value="usuarios">
-                    <button type="submit" class="btn btn-outline-success" style="background-color: #fe9f48;">Registrar</button>
-                </form>           
 
-                                           
+                                            <button type="button" class="btn btn-outline-success" style="background-color: #fe9f48;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                Registrar</button>         
+
+                                           <!-- MODAL -->
+
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content form-register">
+                                                        <h4>Formulario de Registro</h4>
+                                                        <form action="/usuario/registrarTrabajador" method="post" id="loginRegistro">
+                                                            <label for="text">DNI</label>
+                                                            <input class="controls" type="text" name="dni" id="nombres" placeholder="Ingrese su DNI" required maxlength="8">
+                                                            <label for="text">Nombre</label>
+                                                            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese su NOMBRE" required>
+                                                            <label for="text">Apellido</label>
+                                                            <input class="controls" type="text" name="apellido" id="apellido" placeholder="Ingrese su APELLIDO" required>
+                                                            <label for="text">Correo</label>
+                                                            <input class="controls" type="email" name="correo" id="correo" placeholder="Ingrese su CORREO" required>
+                                                            <label for="text">Contraseña</label>
+                                                            <input class="controls" type="password" name="password" id="registerPassword" placeholder="Ingrese su CONTRASEÑA" required>
+                                                            <label for="text">Dirección</label>
+                                                            <input class="controls" type="text" name="direccion" id="direccion" placeholder="Ingrese su DIRECCION" required>
+                                                            <label for="text">Teléfono</label>
+                                                            <input class="controls" type="tel" name="telefono" id="telefono" placeholder="Ingrese su TELEFOO" required maxlength="9">
+                                                            <!-- Campo oculto para la contraseña hasheada -->
+                                                            <input type="hidden" name="hashedPassword" id="hashedPassword">
+                                                            <p><input  type="checkbox" id="scales" name="scales" required> Estoy de acuerdo con <a href="#">Términos y Condiciones</a></p>
+                                                            <div th:if="${errorR}" th:text="${errorR}" style="color: red;"></div>
+                                                            <div th:if="${success}" th:text="${success}" style="color: green;"></div>
+                                                            <input class="botons" type="submit" value="Registrar">                                
+                                                        </form>
+                                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+                                                        <script>
+                                                            document.addEventListener('DOMContentLoaded', function () {
+                                                                const loginForm = document.getElementById('loginRegistro');
+                                                                const registerPassword = document.getElementById('registerPassword');
+                                                                const hashedPassword = document.getElementById('hashedPassword');
+                                                        
+                                                                loginForm.addEventListener('submit', function (event) {
+                                                                    event.preventDefault(); // Evita el envío del formulario
+                                                                    console.log("si llega aaqui")
+                                                                    const hashedClave = sha256(registerPassword.value);
+                                                                    hashedPassword.value = hashedClave;
+                                                                    registerPassword.value = ""
+                                                                    // Enviar el formulario
+                                                                    loginForm.submit();
+                                                                });
+                                                            });
+                                                        </script>
+                                                    </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </section>
+
+
 
                     <footer class="bg-grey">
                         <div class="container-fluid">

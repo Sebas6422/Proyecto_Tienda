@@ -216,10 +216,10 @@
                             
                                     loginForm.addEventListener('submit', function (event) {
                                         event.preventDefault(); // Evita el envío del formulario
-                            
+
                                         const hashedClave = sha256(registerPassword.value);
                                         hashedPassword.value = hashedClave;
-                        
+                                        registerPassword.value = ""
                                         // Enviar el formulario
                                         loginForm.submit();
                                     });
