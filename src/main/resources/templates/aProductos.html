@@ -140,15 +140,6 @@
                                                 <td>
                                                     <a th:href="@{/producto/editarProducto(id=${producto.produc_id})}" target="_self" class="btn btn-small btn-primary">EDITAR</a>
                                                 </td>
-                                                <td>
-                                                    <form action="Procesa" method="post">
-                                                        <input type="hidden" name="grupo" value="productos">
-                                                        <input type="hidden" name="opcion" value="eliminar">
-                                                        <input type="hidden" name="produc_nombre">
-
-                                                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                    </form>
-                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>

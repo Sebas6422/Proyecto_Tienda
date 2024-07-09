@@ -142,14 +142,6 @@
                                                             <a th:href="@{/usuario/editarUsuario(id=${cliente.us_id})}" target="_self" class="btn btn-small btn-primary">EDITAR</a>
                                                         </td>
                                                         
-                                                        <td>
-                                                            <form action="Procesa" method="POST">
-                                                                <input type="hidden" name="opcion" value="eliminar">
-                                                                <input type="hidden" name="grupo" value="usuarios">
-                                                                <input type="hidden" name="us_dni" value="<%= listausuarios.get(i).getUs_dni() %>">
-                                                                <button type="submit" class="btn btn-small btn-outline-danger" style="background-color: #fe9f48;">ELIMINAR</button>
-                                                            </form>
-                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
