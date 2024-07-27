@@ -150,8 +150,10 @@ public class UsuarioControlador {
 
     @PostMapping("/ingresarLogin")
     public String verificarLogin(@RequestParam(value = "us_correo", required = false) String correo,
-                                 @RequestParam(value = "hashedPasswordL", required = false) String contra,
+                                 @RequestParam(value = "hashedPasswordL", required = false) String contrasenha,
                                  Model model, HttpSession session) {
+
+        String contra = contrasenha.toUpperCase();
 
         if (correo == null || correo.isEmpty() || contra == null || contra.isEmpty()) {
             session.setAttribute("error", "Los campos 'Correo' y 'Contraseña' son obligatorios.");
